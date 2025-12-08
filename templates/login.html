@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Welcome to Collegia</h2>
+    <p>Log in to manage your advising and meetings</p>
+
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+      <label>Email</label>
+      {{ form.email(class="login-input") }}
+
+      <label>Password</label>
+      {{ form.password(class="login-input") }}
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="login-footer">
+      <span>New here?</span>
+      <a href="{{ url_for('routes.register') }}">Create an account</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

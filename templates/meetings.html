@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>Schedule a New Meeting</h2>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <label>Student</label>
+            {{ form.student() }}
+
+            <label>Professor</label>
+            {{ form.professor() }}
+
+            <label>Notes</label>
+            {{ form.notes() }}
+
+            {{ form.submit(class="btn") }}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

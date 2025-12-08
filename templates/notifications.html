@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="margin-bottom: 8px;">Notifications</h2>
+<p style="color:#666; margin-bottom:32px;">
+System updates and alerts
+</p>
+
+<div class="notifications-list">
+
+  {% for note in notifications %}
+  <div class="notification-card">
+    <div class="notification-icon">🔔</div>
+    <div class="notification-content">
+      {{ note }}
+      <div class="notification-time">Just now</div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

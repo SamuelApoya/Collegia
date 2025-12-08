@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-wrapper">
+<div class="auth-card">
+<h2>Confirm Booking</h2>
+
+<p>{{ slot.professor_name }}</p>
+<p>{{ slot.date }} at {{ slot.time }}</p>
+
+<form method="POST">
+{{ form.hidden_tag() }}
+{{ form.notes() }}
+{{ form.submit(class="btn") }}
+</form>
+</div>
+</div>
+{% endblock %}

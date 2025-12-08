@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="hero">
+        <h2>Available Professor Sessions</h2>
+        <div class="hero-role">Booking</div>
+    </div>
+
+    {% if available %}
+        {% for slot in available %}
+            <div class="meeting-card">
+                <div class="meeting-header">
+                    Open Slot
+                </div>
+                <div class="meeting-body">
+                    <strong>Date:</strong> {{ slot.date }} <br>
+                    <strong>Time:</strong> {{ slot.time }} <br><br>
+
+                    <a class="login-btn" href="{{ url_for('routes.book', slot_id=slot.id) }}">Book Session</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-card">
+            No sessions available right now.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

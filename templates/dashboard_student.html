@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="hero">
+        <h2>Welcome back, {{ current_user.name }}</h2>
+        <div class="hero-role">Student</div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card purple">
+            <div class="stat-title">Upcoming Meetings</div>
+            <div class="stat-value">{{ meetings|length }}</div>
+        </div>
+
+        <div class="stat-card blue">
+            <div class="stat-title">Account Status</div>
+            <div class="stat-value">Active</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="stat-title">Role</div>
+            <div class="stat-value">Student</div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div>
+            <h3>Upcoming Sessions</h3>
+
+            {% if meetings %}
+                {% for m in meetings %}
+                    <div class="meeting-card">
+                        <div class="meeting-header">
+                            Session
+                        </div>
+                        <div class="meeting-body">
+                            <strong>Professor:</strong> {{ m.professor }} <br>
+                            {{ m.notes }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-card">
+                    No sessions scheduled yet.
+                </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="quick-card">
+                <h3>Announcements</h3>
+                <p>New advisors added this week</p>
+                <p>System maintenance tonight</p>
+            </div>
+
+            <div class="quick-card">
+                <h3>Quick Access</h3>
+                <a class="login-btn" href="{{ url_for('routes.sessions') }}">Browse Available Sessions</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
