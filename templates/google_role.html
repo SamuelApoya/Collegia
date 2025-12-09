@@ -4,16 +4,38 @@
 <div class="login-wrapper">
   <div class="login-card">
     <h2>Choose Your Role</h2>
+    <p>Select how you'll be using Collegia</p>
 
-    <form method="POST">
-      <select name="role" class="login-input" required>
-        <option value="student">Student</option>
-        <option value="professor">Professor</option>
-      </select>
+    <form method="POST" id="roleForm">
+      <input type="hidden" name="role" id="roleInput" value="">
+      
+      <div class="role-selection">
+        <div class="role-option" data-role="student">
+          <div class="role-icon">👨‍🎓</div>
+          <div class="role-title">Student</div>
+          <div class="role-description">Book advising sessions and manage meetings</div>
+        </div>
 
-      <button class="login-btn">Continue</button>
+        <div class="role-option" data-role="professor">
+          <div class="role-icon">👨‍🏫</div>
+          <div class="role-title">Professor</div>
+          <div class="role-description">Create availability and meet with students</div>
+        </div>
+      </div>
+
+      <button class="login-btn" type="submit">Continue</button>
     </form>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll('.role-option').forEach(option => {
+    option.addEventListener('click', function() {
+      document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      document.getElementById('roleInput').value = this.dataset.role;
+    });
+  });
+</script>
 
 {% endblock %}

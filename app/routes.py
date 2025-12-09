@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_dance.contrib.google import make_google_blueprint, google
 from app.extensions import db, login_manager
-from app.models import User, Meeting, Availability
+from app.models import User, Meeting, Availability, Notification
 from forms import LoginForm, RegisterForm, AvailabilityForm, BookingForm
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -122,35 +122,63 @@ def logout():
     logout_user()
     return redirect("/")
 
-@routes.route("/dashboard", methods=["GET", "POST"])
+@routes.route("/dashboard")
 @login_required
 def dashboard():
     if current_user.role == "professor":
-        form = AvailabilityForm()
-
-        if form.validate_on_submit():
-            slot = Availability(
-                professor_name=current_user.name,
-                date=str(form.date.data),
-                time=str(form.time.data)
-            )
-            db.session.add(slot)
-            db.session.commit()
-            return redirect("/dashboard")
-
         meetings = Meeting.query.filter_by(professor=current_user.name).all()
         slots = Availability.query.filter_by(professor_name=current_user.name).all()
-
-        return render_template("dashboard_professor.html", form=form, meetings=meetings, slots=slots)
+        open_slots = sum(1 for s in slots if not s.booked)
+        booked_sessions = sum(1 for s in slots if s.booked)
+        
+        return render_template(
+            "professor_home.html",
+            meetings=meetings,
+            open_slots=open_slots,
+            booked_sessions=booked_sessions
+        )
 
     meetings = Meeting.query.filter_by(student=current_user.name).all()
     return render_template("dashboard_student.html", meetings=meetings)
+
+@routes.route("/manage-sessions", methods=["GET", "POST"])
+@login_required
+def manage_sessions():
+    if current_user.role != "professor":
+        return redirect("/sessions")
+    
+    form = AvailabilityForm()
+
+    if form.validate_on_submit():
+        slot = Availability(
+            professor_name=current_user.name,
+            date=str(form.date.data),
+            time=str(form.time.data)
+        )
+        db.session.add(slot)
+        db.session.commit()
+        
+        # Create notification for students
+        notification = Notification(
+            user_email="all_students",
+            message=f"New availability added by {current_user.name}",
+            type="new_availability"
+        )
+        db.session.add(notification)
+        db.session.commit()
+        
+        return redirect("/manage-sessions")
+
+    meetings = Meeting.query.filter_by(professor=current_user.name).all()
+    slots = Availability.query.filter_by(professor_name=current_user.name).all()
+
+    return render_template("manage_sessions_professor.html", form=form, meetings=meetings, slots=slots)
 
 @routes.route("/sessions")
 @login_required
 def sessions():
     available = Availability.query.filter_by(booked=False).all()
-    return render_template("sessions.html", available=available)
+    return render_template("manage_sessions_student.html", available=available)
 
 @routes.route("/book/<int:slot_id>", methods=["GET", "POST"])
 @login_required
@@ -162,10 +190,23 @@ def book(slot_id):
         meeting = Meeting(
             student=current_user.name,
             professor=slot.professor_name,
-            notes=form.notes.data
+            notes=form.notes.data,
+            date=slot.date,
+            time=slot.time
         )
         slot.booked = True
         db.session.add(meeting)
+        
+        # Create notification for professor
+        professor = User.query.filter_by(name=slot.professor_name).first()
+        if professor:
+            notification = Notification(
+                user_email=professor.email,
+                message=f"{current_user.name} booked your session on {slot.date} at {slot.time}",
+                type="booking_confirmation"
+            )
+            db.session.add(notification)
+        
         db.session.commit()
         return redirect("/dashboard")
 
@@ -174,9 +215,9 @@ def book(slot_id):
 @routes.route("/notifications")
 @login_required
 def notifications():
-    if current_user.role == "student":
-        data = ["New professor availability", "Session confirmed"]
-    else:
-        data = ["A student booked your session", "Availability active"]
-
-    return render_template("notifications.html", notifications=data)
+    user_notifications = Notification.query.filter(
+        (Notification.user_email == current_user.email) |
+        (Notification.user_email == f"all_{current_user.role}s")
+    ).order_by(Notification.created_at.desc()).all()
+    
+    return render_template("notifications.html", notifications=user_notifications)

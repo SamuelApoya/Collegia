@@ -24,21 +24,23 @@
 
     <div class="stat-card green">
       <div class="stat-title">Account Status</div>
-      <div class="stat-value">Active</div>
+      <div class="stat-value status-active">Active</div>
     </div>
   </div>
 
   <div class="dashboard-grid">
 
     <div>
-      <h3>Today’s Overview</h3>
+      <h3 style="margin-bottom: 20px; font-size: 24px;">Today's Overview</h3>
 
       {% if meetings %}
         <div class="meeting-card">
           <div class="meeting-header">Next Session</div>
           <div class="meeting-body">
             <strong>Student:</strong> {{ meetings[0].student }}<br>
-            <strong>Notes:</strong> {{ meetings[0].notes }}
+            <strong>Notes:</strong> {{ meetings[0].notes }}<br>
+            <strong>Date:</strong> {{ meetings[0].date }}<br>
+            <strong>Time:</strong> {{ meetings[0].time }}
           </div>
         </div>
       {% else %}
@@ -58,8 +60,9 @@
 
       <div class="quick-card">
         <h3>Advising Tips</h3>
-        <p>Keep a few recurring office hour slots open each week.</p>
-        <p>Encourage students to share an agenda in the notes field.</p>
+        <p>✅ Keep recurring office hours open each week</p>
+        <p>✅ Encourage students to share agendas</p>
+        <p>✅ Review notes before each meeting</p>
       </div>
     </div>
 

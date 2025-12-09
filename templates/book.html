@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="auth-wrapper">
-<div class="auth-card">
-<h2>Confirm Booking</h2>
 
-<p>{{ slot.professor_name }}</p>
-<p>{{ slot.date }} at {{ slot.time }}</p>
+<div class="login-wrapper">
+<div class="login-card">
+<h2>Confirm Booking</h2>
+<p style="margin-bottom: 24px;">Review session details before confirming</p>
+
+<div style="background: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 24px; text-align: left;">
+  <p style="margin-bottom: 8px;"><strong>Professor:</strong> {{ slot.professor_name }}</p>
+  <p style="margin-bottom: 8px;"><strong>Date:</strong> {{ slot.date }}</p>
+  <p><strong>Time:</strong> {{ slot.time }}</p>
+</div>
 
 <form method="POST">
 {{ form.hidden_tag() }}
-{{ form.notes() }}
-{{ form.submit(class="btn") }}
+{{ form.notes(class="login-input", placeholder="Add any notes or topics you'd like to discuss...") }}
+{{ form.submit(class="login-btn") }}
 </form>
 </div>
 </div>
