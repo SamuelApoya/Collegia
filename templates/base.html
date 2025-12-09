@@ -3,6 +3,7 @@
 <head>
     <title>Collegia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
 <body>
 
@@ -14,9 +15,9 @@
             <a href="{{ url_for('routes.dashboard') }}">Home</a>
 
             {% if current_user.role == "student" %}
-                <a href="{{ url_for('routes.sessions') }}">Your Sessions</a>
+                <a href="{{ url_for('routes.sessions') }}">Available Sessions</a>
             {% else %}
-                <a href="{{ url_for('routes.manage_sessions') }}">Your Sessions</a>
+                <a href="{{ url_for('routes.sessions') }}">Manage Sessions</a>
             {% endif %}
 
             <a href="{{ url_for('routes.notifications') }}">Notifications</a>
@@ -34,6 +35,5 @@
 {% block content %}{% endblock %}
 </div>
 
-<script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

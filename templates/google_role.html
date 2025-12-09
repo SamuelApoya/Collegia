@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Choose Your Role</h2>
+
+    <form method="POST">
+      <select name="role" class="login-input" required>
+        <option value="student">Student</option>
+        <option value="professor">Professor</option>
+      </select>
+
+      <button class="login-btn">Continue</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
