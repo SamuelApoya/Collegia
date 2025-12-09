@@ -8,15 +8,16 @@
 
     <form method="POST">
       {{ form.hidden_tag() }}
-
-      <label>Email</label>
-      {{ form.email(class="login-input") }}
-
-      <label>Password</label>
-      {{ form.password(class="login-input") }}
-
+      {{ form.email(class="login-input", placeholder="Email") }}
+      {{ form.password(class="login-input", placeholder="Password") }}
       <button type="submit" class="login-btn">Login</button>
     </form>
+
+    <div style="margin-top: 24px; text-align: center;">
+        <a href="{{ url_for('google.login') }}">
+            <img src="https://developers.google.com/identity/images/g-logo.png" width="42">
+        </a>
+    </div>
 
     <div class="login-footer">
       <span>New here?</span>

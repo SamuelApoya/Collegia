@@ -1,3 +1,6 @@
+import os
+os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
+
 from app import create_app
 
 app = create_app()

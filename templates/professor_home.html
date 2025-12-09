@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+
+  <div class="hero">
+    <div>
+      <h2>Welcome back, Prof. {{ current_user.name }}</h2>
+      <p>Your advising overview at a glance</p>
+    </div>
+    <div class="hero-role">Professor</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card purple">
+      <div class="stat-title">Open Slots</div>
+      <div class="stat-value">{{ open_slots }}</div>
+    </div>
+
+    <div class="stat-card blue">
+      <div class="stat-title">Booked Sessions</div>
+      <div class="stat-value">{{ booked_sessions }}</div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-title">Account Status</div>
+      <div class="stat-value">Active</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <div>
+      <h3>Today’s Overview</h3>
+
+      {% if meetings %}
+        <div class="meeting-card">
+          <div class="meeting-header">Next Session</div>
+          <div class="meeting-body">
+            <strong>Student:</strong> {{ meetings[0].student }}<br>
+            <strong>Notes:</strong> {{ meetings[0].notes }}
+          </div>
+        </div>
+      {% else %}
+        <div class="empty-card">
+          No sessions scheduled yet. Create availability so students can book time with you.
+        </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <div class="quick-card">
+        <h3>Quick Actions</h3>
+        <a class="login-btn" href="{{ url_for('routes.manage_sessions') }}">Manage Sessions</a>
+        <br><br>
+        <a class="login-btn" href="{{ url_for('routes.notifications') }}">View Notifications</a>
+      </div>
+
+      <div class="quick-card">
+        <h3>Advising Tips</h3>
+        <p>Keep a few recurring office hour slots open each week.</p>
+        <p>Encourage students to share an agenda in the notes field.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
