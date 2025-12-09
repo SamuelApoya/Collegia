@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+
+<div class="page-header">
+  <h2>Available Sessions</h2>
+  <p>Browse and book advisor sessions</p>
+</div>
+
+{% if available %}
+  <div class="sessions-grid">
+    {% for slot in available %}
+    <div class="session-card">
+      <div class="session-card-header">
+        <div class="session-icon-large">👨‍🏫</div>
+        <div class="session-prof-name">{{ slot.professor_name }}</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-detail">
+          <span class="detail-icon">📅</span>
+          <span>{{ slot.date }}</span>
+        </div>
+        <div class="session-detail">
+          <span class="detail-icon">⏰</span>
+          <span>{{ slot.time }}</span>
+        </div>
+      </div>
+      <div class="session-card-footer">
+        <a class="book-btn" href="{{ url_for('routes.book', slot_id=slot.id) }}">Book Session</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state-large">
+    <div class="empty-icon-large">📭</div>
+    <h3>No sessions available right now</h3>
+    <p>Check back soon for new advisor availability</p>
+  </div>
+{% endif %}
+
+</div>
+
+{% endblock %}

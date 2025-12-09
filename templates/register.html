@@ -5,18 +5,15 @@
 <div class="login-wrapper">
     <div class="login-card">
         <h2>Create your account</h2>
-        <p>Join Collegia to manage advising and meetings.</p>
+        <p>Join Collegia to manage advising and meetings</p>
 
         <form method="POST">
-            <input class="login-input" type="text" name="name" placeholder="Full Name" required>
-            <input class="login-input" type="email" name="email" placeholder="Email" required>
-            <input class="login-input" type="password" name="password" placeholder="Password" required>
-
-            <select class="login-input" name="role" required>
-                <option value="student">Student</option>
-                <option value="professor">Professor</option>
-            </select>
-
+            {{ form.hidden_tag() }}
+            {{ form.name(class="login-input", placeholder="Full Name") }}
+            {{ form.email(class="login-input", placeholder="Email") }}
+            {{ form.password(class="login-input", placeholder="Password") }}
+            {{ form.role(class="login-input") }}
+            
             <button class="login-btn" type="submit">Create Account</button>
         </form>
 

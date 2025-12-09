@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="container">
+
 <h2 style="margin-bottom: 8px;">Notifications</h2>
-<p style="color:#666; margin-bottom:32px;">
+<p style="color: var(--text-gray); margin-bottom: 32px;">
 System updates and alerts
 </p>
 
@@ -10,13 +12,24 @@ System updates and alerts
 
   {% for note in notifications %}
   <div class="notification-card">
-    <div class="notification-icon">🔔</div>
+    <div class="notification-icon">
+      {% if note.type == "meeting_reminder" %}🔔
+      {% elif note.type == "booking_confirmation" %}✅
+      {% elif note.type == "new_availability" %}📅
+      {% else %}💬{% endif %}
+    </div>
     <div class="notification-content">
-      {{ note }}
-      <div class="notification-time">Just now</div>
+      {{ note.message }}
+      <div class="notification-time">{{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
     </div>
   </div>
+  {% else %}
+  <div class="empty-card">
+    No notifications yet. You'll be notified about upcoming meetings and new availability.
+  </div>
   {% endfor %}
+
+</div>
 
 </div>
 
