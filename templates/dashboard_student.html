@@ -1,13 +1,11 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <div class="container">
-
     <div class="hero">
         <div>
-            <h2>Welcome back, {{ current_user.name }}</h2>
-            <p>Your academic advising hub</p>
+            <h2>Welcome back, {{ current_user.name }}!</h2>
+            <p>Your personalized advising dashboard</p>
         </div>
         <div class="hero-role">Student</div>
     </div>
@@ -17,61 +15,47 @@
             <div class="stat-title">Upcoming Meetings</div>
             <div class="stat-value">{{ meetings|length }}</div>
         </div>
-
         <div class="stat-card blue">
             <div class="stat-title">Account Status</div>
             <div class="stat-value status-active">Active</div>
         </div>
-
-        <div class="stat-card coral">
+        <div class="stat-card green">
             <div class="stat-title">Role</div>
             <div class="stat-value" style="font-size: 20px;">Student</div>
         </div>
     </div>
 
     <div class="dashboard-grid">
-
         <div>
-            <h3 style="margin-bottom: 20px; font-size: 24px;">Upcoming Sessions</h3>
-
+            <h2 style="margin-bottom: 20px;">📅 Your Upcoming Meetings</h2>
             {% if meetings %}
-                {% for m in meetings %}
-                    <div class="meeting-card">
-                        <div class="meeting-header">
-                            Session with {{ m.professor }}
-                        </div>
-                        <div class="meeting-body">
-                            <strong>Date:</strong> {{ m.date }}<br>
-                            <strong>Time:</strong> {{ m.time }}<br>
-                            <strong>Notes:</strong> {{ m.notes }}
-                        </div>
+                {% for meeting in meetings %}
+                <div class="meeting-card">
+                    <div class="meeting-header">
+                        Meeting with {{ meeting.professor }}
                     </div>
+                    <div class="meeting-body">
+                        <strong>Date:</strong> {{ meeting.date }}<br>
+                        <strong>Time:</strong> {{ meeting.time }}<br>
+                        <strong>Notes:</strong> {{ meeting.notes }}
+                    </div>
+                </div>
                 {% endfor %}
             {% else %}
                 <div class="empty-card">
-                    No sessions scheduled yet. Browse available sessions to book!
+                    <p>📭 No upcoming meetings scheduled</p>
                 </div>
             {% endif %}
         </div>
 
         <div>
             <div class="quick-card">
-                <h3>📢 Announcements</h3>
-                <p>✨ New advisors added this week</p>
-                <p>🔧 System maintenance tonight at 2 AM</p>
-                <p>📚 Finals week advising slots open</p>
-            </div>
-
-            <div class="quick-card">
-                <h3>Quick Access</h3>
-                <a class="login-btn" href="{{ url_for('routes.sessions') }}">Browse Available Sessions</a>
-                <br><br>
-                <a class="login-btn" style="background: linear-gradient(135deg, var(--secondary), var(--primary));" href="{{ url_for('routes.notifications') }}">View Notifications</a>
+                <h3>Quick Actions</h3>
+                <a href="{{ url_for('routes.sessions') }}" class="quick-action-btn">View Available Sessions</a>
+                <a href="{{ url_for('routes.notifications') }}" class="quick-action-btn">View Notifications</a>
             </div>
         </div>
-
     </div>
-
 </div>
 
 {% endblock %}

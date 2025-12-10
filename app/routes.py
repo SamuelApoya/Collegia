@@ -158,14 +158,8 @@ def manage_sessions():
         db.session.add(slot)
         db.session.commit()
         
-        # Create notification for students
-        notification = Notification(
-            user_email="all_students",
-            message=f"New availability added by {current_user.name}",
-            type="new_availability"
-        )
-        db.session.add(notification)
-        db.session.commit()
+        # DON'T create notification for new availability
+        # We only want meeting reminders, not availability alerts
         
         return redirect("/manage-sessions")
 
@@ -221,3 +215,48 @@ def notifications():
     ).order_by(Notification.created_at.desc()).all()
     
     return render_template("notifications.html", notifications=user_notifications)
+
+@routes.route("/api/notifications/check")
+@login_required
+def check_notifications():
+    """API endpoint to check for new unread notifications"""
+    from flask import jsonify
+    from datetime import datetime, timedelta
+    
+    # Get ALL notifications from last 10 minutes (not just unread)
+    # This ensures no notification is ever missed
+    ten_minutes_ago = datetime.now() - timedelta(minutes=10)
+    recent_notifications = Notification.query.filter(
+        ((Notification.user_email == current_user.email) |
+         (Notification.user_email == f"all_{current_user.role}s")),
+        Notification.created_at >= ten_minutes_ago
+    ).order_by(Notification.created_at.desc()).all()
+    
+    # Filter out only the ones not yet shown (is_read=False)
+    new_notifications = [n for n in recent_notifications if not n.is_read]
+    
+    return jsonify({
+        'count': len(new_notifications),
+        'notifications': [{
+            'id': n.id,
+            'message': n.message,
+            'type': n.type,
+            'timestamp': n.created_at.strftime('%I:%M %p')
+        } for n in new_notifications]
+    })
+
+@routes.route("/api/notifications/mark-read", methods=["POST"])
+@login_required
+def mark_notification_read():
+    """Mark a notification as read after it's been shown"""
+    from flask import jsonify, request
+    
+    notification_id = request.json.get('id')
+    notification = Notification.query.get(notification_id)
+    
+    if notification and notification.user_email == current_user.email:
+        notification.is_read = True
+        db.session.commit()
+        return jsonify({'success': True})
+    
+    return jsonify({'success': False}), 404
