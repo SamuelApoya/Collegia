@@ -4,30 +4,16 @@
 <div class="container">
     <div class="hero">
         <div>
-            <h2>Welcome back, {{ current_user.name }}!</h2>
+            <h1>Welcome back, {{ current_user.name }}!</h1>
             <p>Your personalized advising dashboard</p>
         </div>
-        <div class="hero-role">Student</div>
+        <div class="hero-badge">STUDENT</div>
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card purple">
-            <div class="stat-title">Upcoming Meetings</div>
-            <div class="stat-value">{{ meetings|length }}</div>
-        </div>
-        <div class="stat-card blue">
-            <div class="stat-title">Account Status</div>
-            <div class="stat-value status-active">Active</div>
-        </div>
-        <div class="stat-card green">
-            <div class="stat-title">Role</div>
-            <div class="stat-value" style="font-size: 20px;">Student</div>
-        </div>
-    </div>
-
-    <div class="dashboard-grid">
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
         <div>
-            <h2 style="margin-bottom: 20px;">📅 Your Upcoming Meetings</h2>
+            <h2 style="margin-bottom: 24px; font-size: 24px;">Your Upcoming Meetings</h2>
+            
             {% if meetings %}
                 {% for meeting in meetings %}
                 <div class="meeting-card">
@@ -35,24 +21,32 @@
                         Meeting with {{ meeting.professor }}
                     </div>
                     <div class="meeting-body">
-                        <strong>Date:</strong> {{ meeting.date }}<br>
-                        <strong>Time:</strong> {{ meeting.time }}<br>
-                        <strong>Notes:</strong> {{ meeting.notes }}
+                        <p><strong>Date:</strong> {{ meeting.date }}</p>
+                        <p><strong>Time:</strong> {{ meeting.time }}</p>
+                        <p><strong>Your Notes:</strong> {{ meeting.notes }}</p>
+                        
+                        {% if meeting.meeting_notes %}
+                        <div style="margin-top: 16px; padding: 16px; background: #E3F2FD; border-left: 4px solid var(--primary);">
+                            <strong style="color: var(--primary);">Professor's Notes:</strong>
+                            <p style="margin-top: 8px;">{{ meeting.meeting_notes }}</p>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="empty-card">
-                    <p>📭 No upcoming meetings scheduled</p>
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>No upcoming meetings scheduled</p>
                 </div>
             {% endif %}
         </div>
 
         <div>
-            <div class="quick-card">
-                <h3>Quick Actions</h3>
-                <a href="{{ url_for('routes.sessions') }}" class="quick-action-btn">View Available Sessions</a>
-                <a href="{{ url_for('routes.notifications') }}" class="quick-action-btn">View Notifications</a>
+            <div class="card">
+                <h3 style="margin-bottom: 16px;">Quick Actions</h3>
+                <a href="{{ url_for('routes.sessions') }}" class="btn btn-primary btn-block" style="margin-bottom: 12px;">View Available Sessions</a>
+                <a href="{{ url_for('routes.notifications') }}" class="btn btn-secondary btn-block">View Notifications</a>
             </div>
         </div>
     </div>

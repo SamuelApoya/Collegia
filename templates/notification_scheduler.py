@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 def check_upcoming_meetings(app):
     """Check for meetings happening in the next 24 hours and send notifications"""
     with app.app_context():
-        now = datetime.now()  # Use local time consistently
+        now = datetime.now()
         
         # Check for meetings 24 hours away
         tomorrow = (now + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -17,21 +17,20 @@ def check_upcoming_meetings(app):
         print(f"[SCHEDULER] Found {len(meetings_24hr)} meetings needing 24hr notification")
         
         for meeting in meetings_24hr:
-            # Check if we already sent 24hr notification for this meeting
             existing_notif = Notification.query.filter_by(
                 meeting_id=meeting.id,
                 type="meeting_reminder"
             ).first()
             
             if existing_notif:
-                continue  # Skip - already notified
+                continue
             
             # Notify student
             student = User.query.filter_by(name=meeting.student).first()
             if student:
                 send_email_notification(
                     student.email,
-                    "Meeting Tomorrow - 24 Hour Reminder",
+                    "📅 Meeting Tomorrow - 24 Hour Reminder",
                     f"Hi {student.name},\n\nYou have a meeting tomorrow ({meeting.date}) at {meeting.time} with {meeting.professor}.\n\nNotes: {meeting.notes}\n\nSee you there!\n\n- Collegia Team"
                 )
                 
@@ -64,18 +63,16 @@ def check_upcoming_meetings(app):
             
             meeting.notified = True
         
-        # NEW: Check for meetings 12 hours away (same day meetings)
+        # Check for meetings 12 hours away
         twelve_hours_from_now = now + timedelta(hours=12)
         today = twelve_hours_from_now.strftime("%Y-%m-%d")
         
-        # Get all meetings today that haven't been notified in the last 12 hours
         meetings_12hr = Meeting.query.filter_by(date=today).all()
         
         print(f"[SCHEDULER] Checking for meetings on {today} (12hr check)...")
         print(f"[SCHEDULER] Found {len(meetings_12hr)} meetings on that date")
         
         for meeting in meetings_12hr:
-            # Parse meeting time to check if it's within 12 hours
             try:
                 meeting_datetime_str = f"{meeting.date} {meeting.time}"
                 meeting_datetime = datetime.strptime(meeting_datetime_str, "%Y-%m-%d %H:%M:%S")
@@ -83,16 +80,14 @@ def check_upcoming_meetings(app):
                 time_until_meeting = meeting_datetime - now
                 hours_until = time_until_meeting.total_seconds() / 3600
                 
-                # Send 12hr reminder if meeting is 10-14 hours away (buffer window)
                 if 10 <= hours_until <= 14:
-                    # Check if we already sent 12hr notification for this meeting
                     existing_notif_12hr = Notification.query.filter_by(
                         meeting_id=meeting.id,
                         type="meeting_reminder_12hr"
                     ).first()
                     
                     if existing_notif_12hr:
-                        continue  # Skip - already notified
+                        continue
                     
                     # Notify student
                     student = User.query.filter_by(name=meeting.student).first()
@@ -147,35 +142,27 @@ def send_email_notification(to_email, subject, body):
         print(f"[EMAIL] Sent to {to_email}: {subject}")
     except Exception as e:
         print(f"[EMAIL] Failed to send email to {to_email}: {e}")
-        print(f"[EMAIL] Make sure MAIL_USERNAME and MAIL_PASSWORD are set in .env")
 
 def start_scheduler(app, test_mode=False):
-    """Start the background scheduler
-    
-    Args:
-        app: Flask application instance
-        test_mode: If True, runs every 2 minutes for testing (default: False)
-    """
+    """Start the background scheduler"""
     scheduler = BackgroundScheduler()
     
     if test_mode:
-        # TEST MODE: Run every 2 minutes so you can see it in action
         print("=" * 60)
         print("SCHEDULER STARTED IN TEST MODE")
         print("=" * 60)
         print("Checking for meetings every 2 MINUTES (for testing)")
-        print("Email notifications: Check your email & in-app notifications")
+        print("Email notifications: 12hr + 24hr reminders")
         print("TIP: Create a meeting for tomorrow to test!")
         print("=" * 60)
         
         scheduler.add_job(
             func=lambda: check_upcoming_meetings(app),
             trigger="interval",
-            minutes=2,  # Run every 2 minutes for testing
+            minutes=2,
             id="check_meetings"
         )
     else:
-        # PRODUCTION MODE: Run every hour (checks both 24hr and 12hr)
         print("=" * 60)
         print("SCHEDULER STARTED IN PRODUCTION MODE")
         print("=" * 60)
@@ -186,11 +173,10 @@ def start_scheduler(app, test_mode=False):
         scheduler.add_job(
             func=lambda: check_upcoming_meetings(app),
             trigger="interval",
-            hours=1,  # Run every hour in production
+            hours=1,
             id="check_meetings"
         )
     
-    # Run immediately on startup
     scheduler.add_job(
         func=lambda: check_upcoming_meetings(app),
         trigger="date",

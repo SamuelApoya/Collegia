@@ -1,11 +1,16 @@
 import os
-from flask import render_template, redirect, Blueprint, request, url_for, session
+from flask import render_template, redirect, Blueprint, request, url_for, session, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_dance.contrib.google import make_google_blueprint, google
 from app.extensions import db, login_manager
 from app.models import User, Meeting, Availability, Notification
-from forms import LoginForm, RegisterForm, AvailabilityForm, BookingForm
+from forms import LoginForm, RegisterForm, AvailabilityForm, BookingForm, SettingsForm, MeetingNotesForm
+from datetime import datetime, timedelta
+
+UPLOAD_FOLDER = 'static/uploads/profiles'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
@@ -17,7 +22,8 @@ google_bp = make_google_blueprint(
     scope=[
         "openid",
         "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile"
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/calendar.events"  # ADDED FOR CALENDAR
     ],
     redirect_to="routes.google_callback"
 )
@@ -29,6 +35,49 @@ def on_load(state):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def create_google_calendar_event(meeting):
+    """Create Google Calendar event for a meeting"""
+    try:
+        if not google.authorized:
+            return False
+        
+        # Parse meeting date and time
+        meeting_datetime = datetime.strptime(f"{meeting.date} {meeting.time}", "%Y-%m-%d %H:%M:%S")
+        end_datetime = meeting_datetime + timedelta(hours=1)  # 1 hour meeting
+        
+        event = {
+            'summary': f'Advising Meeting: {meeting.student} & {meeting.professor}',
+            'description': f'Student Notes: {meeting.notes}',
+            'start': {
+                'dateTime': meeting_datetime.isoformat(),
+                'timeZone': 'America/New_York',
+            },
+            'end': {
+                'dateTime': end_datetime.isoformat(),
+                'timeZone': 'America/New_York',
+            },
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'email', 'minutes': 24 * 60},
+                    {'method': 'popup', 'minutes': 30},
+                ],
+            },
+        }
+        
+        response = google.post(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+            json=event
+        )
+        
+        return response.ok
+    except Exception as e:
+        print(f"[CALENDAR] Error creating event: {e}")
+        return False
 
 @routes.route("/", methods=["GET", "POST"])
 def login():
@@ -157,10 +206,7 @@ def manage_sessions():
         )
         db.session.add(slot)
         db.session.commit()
-        
-        # DON'T create notification for new availability
-        # We only want meeting reminders, not availability alerts
-        
+        flash('Availability added successfully!', 'success')
         return redirect("/manage-sessions")
 
     meetings = Meeting.query.filter_by(professor=current_user.name).all()
@@ -202,9 +248,39 @@ def book(slot_id):
             db.session.add(notification)
         
         db.session.commit()
+        
+        # CREATE GOOGLE CALENDAR EVENT
+        calendar_created = create_google_calendar_event(meeting)
+        if calendar_created:
+            flash('Meeting booked and added to your Google Calendar!', 'success')
+        else:
+            flash('Meeting booked successfully!', 'success')
+        
         return redirect("/dashboard")
 
     return render_template("book.html", slot=slot, form=form)
+
+@routes.route("/meeting/<int:meeting_id>/notes", methods=["GET", "POST"])
+@login_required
+def meeting_notes(meeting_id):
+    meeting = Meeting.query.get_or_404(meeting_id)
+    
+    if current_user.role != "professor" or meeting.professor != current_user.name:
+        flash('Unauthorized access', 'error')
+        return redirect("/dashboard")
+    
+    form = MeetingNotesForm()
+    
+    if form.validate_on_submit():
+        meeting.meeting_notes = form.meeting_notes.data
+        db.session.commit()
+        flash('Meeting notes saved successfully!', 'success')
+        return redirect("/dashboard")
+    
+    if meeting.meeting_notes:
+        form.meeting_notes.data = meeting.meeting_notes
+    
+    return render_template("meeting_notes.html", form=form, meeting=meeting)
 
 @routes.route("/notifications")
 @login_required
@@ -214,49 +290,39 @@ def notifications():
         (Notification.user_email == f"all_{current_user.role}s")
     ).order_by(Notification.created_at.desc()).all()
     
+    for notif in user_notifications:
+        notif.is_read = True
+    db.session.commit()
+    
     return render_template("notifications.html", notifications=user_notifications)
 
-@routes.route("/api/notifications/check")
+@routes.route("/settings", methods=["GET", "POST"])
 @login_required
-def check_notifications():
-    """API endpoint to check for new unread notifications"""
-    from flask import jsonify
-    from datetime import datetime, timedelta
+def settings():
+    form = SettingsForm()
     
-    # Get ALL notifications from last 10 minutes (not just unread)
-    # This ensures no notification is ever missed
-    ten_minutes_ago = datetime.now() - timedelta(minutes=10)
-    recent_notifications = Notification.query.filter(
-        ((Notification.user_email == current_user.email) |
-         (Notification.user_email == f"all_{current_user.role}s")),
-        Notification.created_at >= ten_minutes_ago
-    ).order_by(Notification.created_at.desc()).all()
-    
-    # Filter out only the ones not yet shown (is_read=False)
-    new_notifications = [n for n in recent_notifications if not n.is_read]
-    
-    return jsonify({
-        'count': len(new_notifications),
-        'notifications': [{
-            'id': n.id,
-            'message': n.message,
-            'type': n.type,
-            'timestamp': n.created_at.strftime('%I:%M %p')
-        } for n in new_notifications]
-    })
-
-@routes.route("/api/notifications/mark-read", methods=["POST"])
-@login_required
-def mark_notification_read():
-    """Mark a notification as read after it's been shown"""
-    from flask import jsonify, request
-    
-    notification_id = request.json.get('id')
-    notification = Notification.query.get(notification_id)
-    
-    if notification and notification.user_email == current_user.email:
-        notification.is_read = True
+    if form.validate_on_submit():
+        if form.name.data:
+            current_user.name = form.name.data
+        
+        if form.new_password.data:
+            current_user.password = generate_password_hash(form.new_password.data)
+        
+        if form.profile_picture.data:
+            file = form.profile_picture.data
+            if file and allowed_file(file.filename):
+                filename = secure_filename(f"{current_user.id}_{file.filename}")
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                
+                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                
+                file.save(filepath)
+                current_user.profile_picture = filename
+        
         db.session.commit()
-        return jsonify({'success': True})
+        flash('Settings updated successfully!', 'success')
+        return redirect("/settings")
     
-    return jsonify({'success': False}), 404
+    form.name.data = current_user.name
+    
+    return render_template("settings.html", form=form)

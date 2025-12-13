@@ -2,72 +2,67 @@
 {% block content %}
 
 <div class="container">
-
-  <div class="hero">
-    <div>
-      <h2>Welcome back, Prof. {{ current_user.name }}</h2>
-      <p>Your advising overview at a glance</p>
-    </div>
-    <div class="hero-role">Professor</div>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-card purple">
-      <div class="stat-title">Open Slots</div>
-      <div class="stat-value">{{ open_slots }}</div>
-    </div>
-
-    <div class="stat-card blue">
-      <div class="stat-title">Booked Sessions</div>
-      <div class="stat-value">{{ booked_sessions }}</div>
-    </div>
-
-    <div class="stat-card green">
-      <div class="stat-title">Account Status</div>
-      <div class="stat-value status-active">Active</div>
-    </div>
-  </div>
-
-  <div class="dashboard-grid">
-
-    <div>
-      <h3 style="margin-bottom: 20px; font-size: 24px;">Today's Overview</h3>
-
-      {% if meetings %}
-        <div class="meeting-card">
-          <div class="meeting-header">Next Session</div>
-          <div class="meeting-body">
-            <strong>Student:</strong> {{ meetings[0].student }}<br>
-            <strong>Notes:</strong> {{ meetings[0].notes }}<br>
-            <strong>Date:</strong> {{ meetings[0].date }}<br>
-            <strong>Time:</strong> {{ meetings[0].time }}
-          </div>
+    <div class="hero">
+        <div>
+            <h1>Welcome back, Prof. {{ current_user.name }}!</h1>
+            <p>Your advising overview at a glance</p>
         </div>
-      {% else %}
-        <div class="empty-card">
-          No sessions scheduled yet. Create availability so students can book time with you.
+        <div class="hero-badge">PROFESSOR</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+        <div>
+            <h2 style="margin-bottom: 24px; font-size: 24px;">Today's Overview</h2>
+
+            {% if meetings %}
+                {% for meeting in meetings %}
+                <div class="meeting-card">
+                    <div class="meeting-header">
+                        Meeting with {{ meeting.student }}
+                    </div>
+                    <div class="meeting-body">
+                        <p><strong>Date:</strong> {{ meeting.date }}</p>
+                        <p><strong>Time:</strong> {{ meeting.time }}</p>
+                        <p><strong>Student Notes:</strong> {{ meeting.notes }}</p>
+                        
+                        {% if meeting.meeting_notes %}
+                        <div style="margin-top: 16px; padding: 16px; background: #E8F5E9; border-left: 4px solid var(--success);">
+                            <strong style="color: var(--success);">Your Notes:</strong>
+                            <p style="margin-top: 8px;">{{ meeting.meeting_notes }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
+                           class="btn btn-primary" 
+                           style="margin-top: 16px; display: inline-block;">
+                            {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>No sessions scheduled yet</p>
+                </div>
+            {% endif %}
         </div>
-      {% endif %}
+
+        <div>
+            <div class="card">
+                <h3 style="margin-bottom: 16px;">Quick Actions</h3>
+                <a href="{{ url_for('routes.manage_sessions') }}" class="btn btn-primary btn-block" style="margin-bottom: 12px;">Manage Sessions</a>
+                <a href="{{ url_for('routes.notifications') }}" class="btn btn-secondary btn-block">View Notifications</a>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 16px;">Advising Tips</h3>
+                <p style="margin-bottom: 8px;">Keep recurring office hours</p>
+                <p style="margin-bottom: 8px;">Take notes during meetings</p>
+                <p>Review student agendas</p>
+            </div>
+        </div>
     </div>
-
-    <div>
-      <div class="quick-card">
-        <h3>Quick Actions</h3>
-        <a class="login-btn" href="{{ url_for('routes.manage_sessions') }}">Manage Sessions</a>
-        <br><br>
-        <a class="login-btn" href="{{ url_for('routes.notifications') }}">View Notifications</a>
-      </div>
-
-      <div class="quick-card">
-        <h3>Advising Tips</h3>
-        <p>✅ Keep recurring office hours open each week</p>
-        <p>✅ Encourage students to share agendas</p>
-        <p>✅ Review notes before each meeting</p>
-      </div>
-    </div>
-
-  </div>
-
 </div>
 
 {% endblock %}

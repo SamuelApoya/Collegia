@@ -2,99 +2,116 @@
 {% block content %}
 
 <div class="container">
-
-  <div class="hero">
-    <div>
-      <h2>Manage Sessions</h2>
-      <p>Create availability and review student meetings</p>
-    </div>
-    <div class="hero-role">Professor</div>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-card purple">
-      <div class="stat-title">Open Slots</div>
-      <div class="stat-value">{{ slots|length }}</div>
-    </div>
-
-    <div class="stat-card blue">
-      <div class="stat-title">Booked Sessions</div>
-      <div class="stat-value">{{ meetings|length }}</div>
-    </div>
-
-    <div class="stat-card green">
-      <div class="stat-title">Status</div>
-      <div class="stat-value status-active">Active</div>
-    </div>
-  </div>
-
-  <div class="dashboard-card">
-    <h2 class="section-title">Your Open Slots</h2>
-
-    {% if slots %}
-      <div class="session-grid">
-        {% for slot in slots %}
-        <div class="meeting-card {% if slot.booked %}slot-booked{% else %}slot-active{% endif %}">
-          <div class="meeting-header">
-            {% if slot.booked %}Booked Slot{% else %}Available Slot{% endif %}
-          </div>
-          <div class="meeting-body">
-            <strong>Date:</strong> {{ slot.date }}<br>
-            <strong>Time:</strong> {{ slot.time }}
-          </div>
+    <div class="hero">
+        <div>
+            <h1>Manage Sessions</h1>
+            <p>Create availability and review student meetings</p>
         </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-box">No availability added yet.</div>
-    {% endif %}
-  </div>
+        <div class="hero-badge">PROFESSOR</div>
+    </div>
 
-  <div class="dashboard-card">
-    <h2 class="section-title">Your Booked Sessions</h2>
-
-    {% if meetings %}
-      <div class="session-grid">
-        {% for meet in meetings %}
-        <div class="meeting-card slot-booked">
-          <div class="meeting-header">Booked Meeting</div>
-          <div class="meeting-body">
-            <strong>Student:</strong> {{ meet.student }}<br>
-            <strong>Date:</strong> {{ meet.date }}<br>
-            <strong>Time:</strong> {{ meet.time }}<br>
-            <strong>Notes:</strong> {{ meet.notes }}
-          </div>
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-title">Open Slots</div>
+            <div class="stat-value">{{ slots|length }}</div>
         </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="empty-box">No booked sessions yet.</div>
-    {% endif %}
-  </div>
-
-  <div class="dashboard-grid">
-    <div class="dashboard-card">
-      <h2 class="section-title">Add New Availability</h2>
-
-      <form method="POST">
-        {{ form.hidden_tag() }}
-        {{ form.date(class="login-input") }}
-        {{ form.time(class="login-input") }}
-        <button class="login-btn" type="submit">Add Availability</button>
-      </form>
+        <div class="stat-card green">
+            <div class="stat-title">Booked Sessions</div>
+            <div class="stat-value">{{ meetings|length }}</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-title">Status</div>
+            <div class="stat-value" style="font-size: 20px; color: var(--success);">Active</div>
+        </div>
     </div>
 
-    <div class="dashboard-card">
-      <h2 class="section-title">Quick Tips</h2>
+    <div class="card">
+        <h2 style="margin-bottom: 24px; font-size: 24px;">Your Availability</h2>
 
-      <div class="tips-grid">
-        <div class="tip-card">✅ Students can instantly book from your open slots</div>
-        <div class="tip-card">🔒 Booked slots become locked automatically</div>
-        <div class="tip-card">📅 Update availability weekly for best engagement</div>
-      </div>
+        {% if slots %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
+                {% for slot in slots %}
+                <div class="meeting-card">
+                    <div class="meeting-header">
+                        {% if slot.booked %}🔒 Booked Slot{% else %}Available Slot{% endif %}
+                    </div>
+                    <div class="meeting-body">
+                        <p><strong>Date:</strong> {{ slot.date }}</p>
+                        <p><strong>Time:</strong> {{ slot.time }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📅</div>
+                <p>No availability added yet</p>
+            </div>
+        {% endif %}
     </div>
-  </div>
 
+    <div class="card">
+        <h2 style="margin-bottom: 24px; font-size: 24px;">Your Booked Sessions</h2>
+
+        {% if meetings %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
+                {% for meeting in meetings %}
+                <div class="meeting-card" style="border-left-color: var(--success);">
+                    <div class="meeting-header">
+                        Meeting with {{ meeting.student }}
+                    </div>
+                    <div class="meeting-body">
+                        <p><strong>Date:</strong> {{ meeting.date }}</p>
+                        <p><strong>Time:</strong> {{ meeting.time }}</p>
+                        <p><strong>Notes:</strong> {{ meeting.notes }}</p>
+                        <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
+                           class="btn btn-primary" 
+                           style="margin-top: 12px; display: inline-block; padding: 8px 16px; font-size: 14px;">
+                            {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p>No booked sessions yet</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px;">
+        <div class="card">
+            <h2 style="margin-bottom: 24px; font-size: 24px;">Add New Availability</h2>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    {{ form.date(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time</label>
+                    {{ form.time(class="form-control") }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Add Availability</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 24px; font-size: 24px;">Quick Tips</h2>
+            <div style="padding: 16px; background: #E3F2FD; border-left: 4px solid var(--primary); margin-bottom: 16px;">
+                Students can instantly book from your open slots
+            </div>
+            <div style="padding: 16px; background: #E8F5E9; border-left: 4px solid var(--success); margin-bottom: 16px;">
+                Booked slots become locked automatically
+            </div>
+            <div style="padding: 16px; background: #FFF3E0; border-left: 4px solid var(--accent);">
+                Update availability weekly for best engagement
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

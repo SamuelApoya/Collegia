@@ -1,12 +1,8 @@
 from flask import Flask
-from flask_login import LoginManager
-from flask_mail import Mail
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
-mail = Mail()
 
 def create_app():
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
@@ -15,6 +11,7 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///collegia.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     
+    # Email configuration
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
     app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
     app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
@@ -22,13 +19,16 @@ def create_app():
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
     
-    from app.extensions import db
+    # File upload configuration
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+    
+    from app.extensions import db, login_manager, mail
+    
     db.init_app(app)
     mail.init_app(app)
     
-    login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = "routes.login"
+    login_manager.login_view = "routes.login"  # SET IT HERE ONLY
     
     @login_manager.user_loader
     def load_user(user_id):
