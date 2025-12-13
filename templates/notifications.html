@@ -2,35 +2,40 @@
 {% block content %}
 
 <div class="container">
-
-<h2 style="margin-bottom: 8px;">Notifications</h2>
-<p style="color: var(--text-gray); margin-bottom: 32px;">
-System updates and alerts
-</p>
-
-<div class="notifications-list">
-
-  {% for note in notifications %}
-  <div class="notification-card">
-    <div class="notification-icon">
-      {% if note.type == "meeting_reminder" %}🔔
-      {% elif note.type == "booking_confirmation" %}✅
-      {% elif note.type == "new_availability" %}📅
-      {% else %}💬{% endif %}
+    <div class="hero">
+        <div>
+            <h1>Notifications</h1>
+            <p>System updates and alerts</p>
+        </div>
+        <div class="hero-badge">{{ current_user.role.upper() }}</div>
     </div>
-    <div class="notification-content">
-      {{ note.message }}
-      <div class="notification-time">{{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+
+    <div class="card">
+        {% if notifications %}
+            {% for note in notifications %}
+            <div class="notification-card">
+                <div class="notification-icon">
+                    {% if note.type == "meeting_reminder" %}
+                    {% elif note.type == "meeting_reminder_12hr" %}⚡
+                    {% elif note.type == "booking_confirmation" %}
+                    {% else %}💬{% endif %}
+                </div>
+                <div style="flex: 1;">
+                    <div>{{ note.message }}</div>
+                    <div class="notification-time">
+                        {{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔔</div>
+                <p>No notifications yet</p>
+                <p style="color: var(--gray); font-size: 14px;">You'll be notified about upcoming meetings</p>
+            </div>
+        {% endif %}
     </div>
-  </div>
-  {% else %}
-  <div class="empty-card">
-    No notifications yet. You'll be notified about upcoming meetings and new availability.
-  </div>
-  {% endfor %}
-
-</div>
-
 </div>
 
 {% endblock %}

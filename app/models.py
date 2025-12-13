@@ -9,6 +9,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(200))
     google_id = db.Column(db.String(200), unique=True)
+    profile_picture = db.Column(db.String(200), default='logo.png')  # CHANGED FROM default.png
     created_at = db.Column(db.DateTime, default=datetime.now)
 
 class Availability(db.Model):
@@ -24,6 +25,7 @@ class Meeting(db.Model):
     student = db.Column(db.String(120))
     professor = db.Column(db.String(120))
     notes = db.Column(db.String(500))
+    meeting_notes = db.Column(db.Text)
     date = db.Column(db.String(50))
     time = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -35,5 +37,5 @@ class Notification(db.Model):
     message = db.Column(db.String(500))
     type = db.Column(db.String(50))
     is_read = db.Column(db.Boolean, default=False)
-    meeting_id = db.Column(db.Integer)  # Track which meeting this is for
+    meeting_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.now)

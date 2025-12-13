@@ -2,40 +2,44 @@
 {% block content %}
 
 <div class="login-wrapper">
-  <div class="login-card">
-    <h2>Choose Your Role</h2>
-    <p>Select how you'll be using Collegia</p>
+    <div class="login-card">
+        <h2>Choose Your Role</h2>
+        <p>Select how you'll be using Collegia</p>
 
-    <form method="POST" id="roleForm">
-      <input type="hidden" name="role" id="roleInput" value="">
-      
-      <div class="role-selection">
-        <div class="role-option" data-role="student">
-          <div class="role-icon">👨‍🎓</div>
-          <div class="role-title">Student</div>
-          <div class="role-description">Book advising sessions and manage meetings</div>
-        </div>
+        <form method="POST" id="roleForm">
+            <input type="hidden" name="role" id="roleInput" value="">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0;">
+                <div class="role-option" data-role="student" style="padding: 40px 24px; border: 3px solid var(--border); text-align: center; cursor: pointer; transition: all 0.3s;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">👨‍🎓</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Student</div>
+                    <div style="color: var(--gray); font-size: 14px;">Book advising sessions</div>
+                </div>
 
-        <div class="role-option" data-role="professor">
-          <div class="role-icon">👨‍🏫</div>
-          <div class="role-title">Professor</div>
-          <div class="role-description">Create availability and meet with students</div>
-        </div>
-      </div>
+                <div class="role-option" data-role="professor" style="padding: 40px 24px; border: 3px solid var(--border); text-align: center; cursor: pointer; transition: all 0.3s;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">👨‍🏫</div>
+                    <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Professor</div>
+                    <div style="color: var(--gray); font-size: 14px;">Manage student meetings</div>
+                </div>
+            </div>
 
-      <button class="login-btn" type="submit">Continue</button>
-    </form>
-  </div>
+            <button class="btn btn-primary btn-block" type="submit">Continue</button>
+        </form>
+    </div>
 </div>
 
 <script>
-  document.querySelectorAll('.role-option').forEach(option => {
+document.querySelectorAll('.role-option').forEach(option => {
     option.addEventListener('click', function() {
-      document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
-      this.classList.add('selected');
-      document.getElementById('roleInput').value = this.dataset.role;
+        document.querySelectorAll('.role-option').forEach(opt => {
+            opt.style.borderColor = 'var(--border)';
+            opt.style.background = 'transparent';
+        });
+        this.style.borderColor = 'var(--primary)';
+        this.style.background = '#E3F2FD';
+        document.getElementById('roleInput').value = this.dataset.role;
     });
-  });
+});
 </script>
 
 {% endblock %}

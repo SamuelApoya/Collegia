@@ -2,21 +2,25 @@
 {% block content %}
 
 <div class="login-wrapper">
-<div class="login-card">
-<h2>Confirm Booking</h2>
-<p style="margin-bottom: 24px;">Review session details before confirming</p>
+    <div class="login-card" style="max-width: 600px;">
+        <h2>Confirm Booking</h2>
+        <p>Review session details before confirming</p>
 
-<div style="background: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 24px; text-align: left;">
-  <p style="margin-bottom: 8px;"><strong>Professor:</strong> {{ slot.professor_name }}</p>
-  <p style="margin-bottom: 8px;"><strong>Date:</strong> {{ slot.date }}</p>
-  <p><strong>Time:</strong> {{ slot.time }}</p>
+        <div style="background: #E3F2FD; padding: 24px; margin: 24px 0; border-left: 4px solid var(--primary);">
+            <p style="margin-bottom: 12px;"><strong>Professor:</strong> {{ slot.professor_name }}</p>
+            <p style="margin-bottom: 12px;"><strong>Date:</strong> {{ slot.date }}</p>
+            <p><strong>Time:</strong> {{ slot.time }}</p>
+        </div>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label class="form-label">Add any notes or topics you'd like to discuss</label>
+                {{ form.notes(class="form-control", placeholder="E.g., Course selection for next semester, internship advice, etc.") }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
+        </form>
+    </div>
 </div>
 
-<form method="POST">
-{{ form.hidden_tag() }}
-{{ form.notes(class="login-input", placeholder="Add any notes or topics you'd like to discuss...") }}
-{{ form.submit(class="login-btn") }}
-</form>
-</div>
-</div>
 {% endblock %}
