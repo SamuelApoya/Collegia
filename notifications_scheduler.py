@@ -147,7 +147,6 @@ def send_email_notification(to_email, subject, body):
         print(f"[EMAIL] Sent to {to_email}: {subject}")
     except Exception as e:
         print(f"[EMAIL] Failed to send email to {to_email}: {e}")
-        print(f"[EMAIL] Make sure MAIL_USERNAME and MAIL_PASSWORD are set in .env")
 
 def start_scheduler(app, test_mode=False):
     """Start the background scheduler
@@ -165,7 +164,6 @@ def start_scheduler(app, test_mode=False):
         print("=" * 60)
         print("Checking for meetings every 2 MINUTES (for testing)")
         print("Email notifications: Check your email & in-app notifications")
-        print("TIP: Create a meeting for tomorrow to test!")
         print("=" * 60)
         
         scheduler.add_job(

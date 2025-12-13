@@ -11,15 +11,15 @@
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card blue">
+        <div class="stat-card">
             <div class="stat-title">Open Slots</div>
-            <div class="stat-value">{{ slots|length }}</div>
+            <div class="stat-value">{{ available_count }}</div>
         </div>
-        <div class="stat-card green">
+        <div class="stat-card">
             <div class="stat-title">Booked Sessions</div>
-            <div class="stat-value">{{ meetings|length }}</div>
+            <div class="stat-value">{{ booked_count }}</div>
         </div>
-        <div class="stat-card orange">
+        <div class="stat-card">
             <div class="stat-title">Status</div>
             <div class="stat-value" style="font-size: 20px; color: var(--success);">Active</div>
         </div>
@@ -28,16 +28,21 @@
     <div class="card">
         <h2 style="margin-bottom: 24px; font-size: 24px;">Your Availability</h2>
 
-        {% if slots %}
+        {% set available_slots = slots|selectattr('booked', 'equalto', False)|list %}
+        {% if available_slots %}
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
-                {% for slot in slots %}
+                {% for slot in available_slots %}
                 <div class="meeting-card">
                     <div class="meeting-header">
-                        {% if slot.booked %}🔒 Booked Slot{% else %}Available Slot{% endif %}
+                        Available Slot
                     </div>
                     <div class="meeting-body">
                         <p><strong>Date:</strong> {{ slot.date }}</p>
                         <p><strong>Time:</strong> {{ slot.time }}</p>
+                        
+                        <form method="POST" action="{{ url_for('routes.delete_slot', slot_id=slot.id) }}" style="margin-top: 12px;">
+                            <button type="submit" class="btn-delete">Delete Slot</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}
@@ -64,11 +69,18 @@
                         <p><strong>Date:</strong> {{ meeting.date }}</p>
                         <p><strong>Time:</strong> {{ meeting.time }}</p>
                         <p><strong>Notes:</strong> {{ meeting.notes }}</p>
-                        <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
-                           class="btn btn-primary" 
-                           style="margin-top: 12px; display: inline-block; padding: 8px 16px; font-size: 14px;">
-                            {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
-                        </a>
+                        
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
+                               class="btn btn-primary" 
+                               style="flex: 1; text-align: center; padding: 10px; font-size: 14px; text-decoration: none;">
+                                {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
+                            </a>
+                            
+                            <form method="POST" action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}" style="flex: 1; margin: 0;">
+                                <button type="submit" class="btn-delete" style="width: 100%;">Cancel Meeting</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -108,7 +120,7 @@
                 Booked slots become locked automatically
             </div>
             <div style="padding: 16px; background: #FFF3E0; border-left: 4px solid var(--accent);">
-                Update availability weekly for best engagement
+                Click Delete to remove unused slots
             </div>
         </div>
     </div>

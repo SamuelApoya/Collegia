@@ -17,8 +17,15 @@
             {% if meetings %}
                 {% for meeting in meetings %}
                 <div class="meeting-card">
-                    <div class="meeting-header">
-                        Meeting with {{ meeting.professor }}
+                    <div class="meeting-header" style="display: flex; align-items: center; gap: 16px;">
+                        {% if meeting.professor_picture %}
+                            <img src="{{ url_for('static', filename='uploads/profiles/' + meeting.professor_picture) }}" 
+                                 alt="{{ meeting.professor }}"
+                                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                        {% else %}
+                            <span style="font-size: 32px;">👨‍🏫</span>
+                        {% endif %}
+                        <span>Meeting with {{ meeting.professor }}</span>
                     </div>
                     <div class="meeting-body">
                         <p><strong>Date:</strong> {{ meeting.date }}</p>
