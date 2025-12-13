@@ -41,7 +41,6 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def send_email_notification(to_email, subject, body):
-    """Send email notification"""
     try:
         msg = Message(
             subject=subject,
@@ -49,12 +48,11 @@ def send_email_notification(to_email, subject, body):
             body=body
         )
         mail.send(msg)
-        print(f"[EMAIL] ✅ Sent to {to_email}: {subject}")
+        print(f"[EMAIL] Sent to {to_email}: {subject}")
     except Exception as e:
-        print(f"[EMAIL] ❌ Failed to send to {to_email}: {e}")
+        print(f"[EMAIL] Failed to send to {to_email}: {e}")
 
 def create_google_calendar_event(meeting):
-    """Create Google Calendar event for a meeting"""
     try:
         if not google.authorized:
             return False
@@ -188,24 +186,12 @@ def logout():
 @login_required
 def dashboard():
     if current_user.role == "professor":
-        meetings = Meeting.query.filter_by(professor=current_user.name).all()
-        slots = Availability.query.filter_by(professor_name=current_user.name).all()
-        open_slots = sum(1 for s in slots if not s.booked)
-        booked_sessions = sum(1 for s in slots if s.booked)
-        
-        return render_template(
-            "professor_home.html",
-            meetings=meetings,
-            open_slots=open_slots,
-            booked_sessions=booked_sessions
-        )
+        return redirect("/manage-sessions")
 
-    # Student dashboard - add professor profile pictures
     meetings = Meeting.query.filter_by(student=current_user.name).all()
     
-    # Add professor profile picture to each meeting
     for meeting in meetings:
-        professor = User.query.filter_by(name=meeting.professor).first()
+        professor = User.query.filter_by(email=meeting.professor_email).first()
         meeting.professor_picture = professor.profile_picture if professor else None
     
     return render_template("dashboard_student.html", meetings=meetings)
@@ -221,6 +207,7 @@ def manage_sessions():
     if form.validate_on_submit():
         slot = Availability(
             professor_name=current_user.name,
+            professor_email=current_user.email,
             date=str(form.date.data),
             time=str(form.time.data)
         )
@@ -249,9 +236,8 @@ def manage_sessions():
 def sessions():
     available = Availability.query.filter_by(booked=False).all()
     
-    # Add professor profile picture to each slot
     for slot in available:
-        professor = User.query.filter_by(name=slot.professor_name).first()
+        professor = User.query.filter_by(email=slot.professor_email).first()
         slot.professor_picture = professor.profile_picture if professor else None
     
     return render_template("manage_sessions_student.html", available=available)
@@ -265,7 +251,9 @@ def book(slot_id):
     if form.validate_on_submit():
         meeting = Meeting(
             student=current_user.name,
+            student_email=current_user.email,
             professor=slot.professor_name,
+            professor_email=slot.professor_email,
             notes=form.notes.data,
             date=slot.date,
             time=slot.time
@@ -273,7 +261,7 @@ def book(slot_id):
         slot.booked = True
         db.session.add(meeting)
         
-        professor = User.query.filter_by(name=slot.professor_name).first()
+        professor = User.query.filter_by(email=slot.professor_email).first()
         if professor:
             notification = Notification(
                 user_email=professor.email,
@@ -286,7 +274,7 @@ def book(slot_id):
         
         calendar_created = create_google_calendar_event(meeting)
         if calendar_created:
-            flash('Meeting booked and added to your Google Calendar! 📅', 'success')
+            flash('Meeting booked and added to your Google Calendar!', 'success')
         else:
             flash('Meeting booked successfully!', 'success')
         
@@ -319,8 +307,6 @@ def meeting_notes(meeting_id):
 @routes.route('/delete-slot/<int:slot_id>', methods=['POST'])
 @login_required
 def delete_slot(slot_id):
-    """Delete an availability slot (professors only)"""
-    
     if current_user.role != 'professor':
         flash('Only professors can delete availability slots.', 'error')
         return redirect(url_for('routes.dashboard'))
@@ -338,14 +324,12 @@ def delete_slot(slot_id):
     db.session.delete(slot)
     db.session.commit()
     
-    flash(f'✅ Availability slot for {slot.date} at {slot.time} has been deleted.', 'success')
+    flash(f'Availability slot for {slot.date} at {slot.time} has been deleted.', 'success')
     return redirect(url_for('routes.manage_sessions'))
 
 @routes.route('/cancel-meeting/<int:meeting_id>', methods=['POST'])
 @login_required
 def cancel_meeting(meeting_id):
-    """Cancel a booked meeting (professors only)"""
-    
     if current_user.role != 'professor':
         flash('Only professors can cancel meetings.', 'error')
         return redirect(url_for('routes.dashboard'))
@@ -356,7 +340,7 @@ def cancel_meeting(meeting_id):
         flash('You can only cancel your own meetings.', 'error')
         return redirect(url_for('routes.manage_sessions'))
     
-    student = User.query.filter_by(name=meeting.student).first()
+    student = User.query.filter_by(email=meeting.student_email).first()
     meeting_date = meeting.date
     meeting_time = meeting.time
     student_name = meeting.student
@@ -378,7 +362,7 @@ def cancel_meeting(meeting_id):
     if student:
         cancellation_notification = Notification(
             user_email=student.email,
-            message=f'⚠️ Meeting cancelled: {meeting_date} at {meeting_time} with {meeting.professor}',
+            message=f'Meeting cancelled: {meeting_date} at {meeting_time} with {meeting.professor}',
             type='meeting_cancelled'
         )
         db.session.add(cancellation_notification)
@@ -391,7 +375,7 @@ def cancel_meeting(meeting_id):
         
         db.session.commit()
     
-    flash(f'✅ Meeting with {student_name} on {meeting_date} at {meeting_time} has been cancelled. Student notified.', 'success')
+    flash(f'Meeting with {student_name} on {meeting_date} at {meeting_time} has been cancelled. Student notified.', 'success')
     return redirect(url_for('routes.manage_sessions'))
 
 @routes.route("/notifications")
