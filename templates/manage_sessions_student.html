@@ -15,7 +15,13 @@
             {% for slot in available %}
             <div class="session-card">
                 <div class="session-card-header">
-                    <div class="session-icon">👨‍🏫</div>
+                    {% if slot.professor_picture %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' + slot.professor_picture) }}" 
+                             alt="{{ slot.professor_name }}"
+                             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    {% else %}
+                        <div class="session-icon">👨‍🏫</div>
+                    {% endif %}
                     <div class="session-prof-name">{{ slot.professor_name }}</div>
                 </div>
                 <div class="session-card-body">
