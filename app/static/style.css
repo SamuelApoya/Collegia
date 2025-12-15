@@ -170,20 +170,20 @@ body {
     background: 
         linear-gradient(
             135deg,
-            rgba(33, 150, 243, 0.35) 0%,      /* 35% opacity - very transparent! */
-            rgba(0, 188, 212, 0.40) 100%       /* 40% opacity */
+            rgba(33, 150, 243, 0.35) 0%,
+            rgba(0, 188, 212, 0.40) 100% 
         ),
         url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1920');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     color: var(--white);
-    padding: 80px 60px 100px 60px;  /* Reduced top padding from 100px to 80px */
+    padding: 80px 60px 100px 60px;
     margin: 0;
-    min-height: calc(100vh - 70px);  /* Full page minus navbar */
+    min-height: calc(100vh - 70px);
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;  /* Changed from center to flex-start - moves content to top! */
+    align-items: flex-start;
     overflow: hidden;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
@@ -908,9 +908,7 @@ textarea.form-control {
     color: #C62828;
 }
 
-/* ============================================
-   CUSTOM CONFIRMATION MODAL
-   ============================================ */
+   /*CUSTOM CONFIRMATION MODAL*/
 .confirmation-backdrop {
     position: fixed;
     top: 0;
@@ -987,9 +985,7 @@ textarea.form-control {
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
-/* ============================================
-   DASHBOARD HEADER WITH GRADIENT
-   ============================================ */
+   /*DASHBOARD HEADER WITH GRADIENT*/
 .dashboard-header {
     background: linear-gradient(
         135deg,
