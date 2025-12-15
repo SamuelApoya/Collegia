@@ -4,3 +4,16 @@ __pycache__/
 .DS_Store
 venv/
 instance/
+*.pyo
+*.pyd
+.pytest_cache/
+htmlcov/
+.coverage
+*.db
+*.sqlite
+*.sqlite3
+.vscode/
+*.log
+.python-version
+build/
+.cache/
