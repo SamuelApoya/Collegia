@@ -1,6 +1,6 @@
 # Collegia
 
-A full-stack advising management platform that consolidates fragmented workflows-spreadsheets, manual emails, Google Docs, and multiple calendar apps—into one unified system for students and faculty advisors.
+A full-stack advising management platform that consolidates fragmented workflows-spreadsheets, manual emails, Google Docs, and multiple calendar apps as one unified system for students and faculty advisors with isntant and real-time note-taking
 
 ## Overview
 
