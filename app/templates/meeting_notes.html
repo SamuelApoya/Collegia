@@ -1,45 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
-    <div class="hero">
-        <div>
-            <h1>Meeting Notes</h1>
-            <p>Document your advising session with {{ meeting.student }}</p>
-        </div>
-        <div class="hero-badge">PROFESSOR</div>
+<div class="container container-padding">
+    <div class="dashboard-header">
+        <h1>Meeting Notes</h1>
+        <p>Document your advising session with {{ meeting.student }}</p>
     </div>
 
-    <div style="max-width: 800px; margin: 0 auto;">
+    <div class="notes-wrapper">
         <div class="card">
-            <h2 style="margin-bottom: 24px; font-size: 24px;">Meeting Details</h2>
+            <h2 class="section-heading">Meeting Details</h2>
             
-            <div style="background:#E3F2FD; padding: 24px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
-                <p style="margin-bottom: 12px;"><strong>Student:</strong> {{ meeting.student }}</p>
-                <p style="margin-bottom: 12px;"><strong>Date:</strong> {{ meeting.date }}</p>
-                <p style="margin-bottom: 12px;"><strong>Time:</strong> {{ meeting.time }}</p>
-                <p><strong>Student's Agenda:</strong> {{ meeting.notes }}</p>
+            <div class="meeting-details-box">
+                <p class="detail-item"><strong>Student:</strong> {{ meeting.student }}</p>
+                <p class="detail-item"><strong>Date:</strong> {{ meeting.date }}</p>
+                <p class="detail-item"><strong>Time:</strong> {{ meeting.time }}</p>
+                <p class="detail-item-last"><strong>Student's Agenda:</strong> {{ meeting.notes }}</p>
             </div>
 
             <form method="POST">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     <label class="form-label">Your Meeting Notes</label>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 12px;">
+                    <p class="form-description">
                         Document discussion points, action items, and recommendations. 
                         These notes will be visible to the student.
                     </p>
-                    {{ form.meeting_notes(class="form-control", 
+                    {{ form.meeting_notes(class="form-control form-control-large", 
                         placeholder="E.g., 
 - Discussed course options for next semester
 - Recommended ECON 201 and MATH 215
 - Student to meet with career services by Oct 15
-- Follow-up meeting needed in 2 weeks",
-                        style="min-height: 300px;") }}
+- Follow-up meeting needed in 2 weeks") }}
                 </div>
-                <div style="display: flex; gap: 12px;">
+                <div class="form-actions-buttons">
                     <button type="submit" class="btn btn-primary">Save Notes</button>
-                    <a href="{{ url_for('routes.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ url_for('routes.home') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

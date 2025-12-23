@@ -12,13 +12,19 @@
 {% if current_user.is_authenticated %}
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="{{ url_for('routes.dashboard') }}" class="navbar-brand">
+        <a href="{{ url_for('routes.home') }}" class="navbar-brand">
             <span class="navbar-brand-icon">🎓</span>
             <span>Collegia</span>
         </a>
         
-        <ul class="navbar-nav">
-            <li><a href="{{ url_for('routes.dashboard') }}" class="nav-link">Dashboard</a></li>
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <ul class="navbar-nav" id="navLinks">
+            <li><a href="{{ url_for('routes.home') }}" class="nav-link">Home</a></li>
             
             {% if current_user.role == "student" %}
                 <li><a href="{{ url_for('routes.sessions') }}" class="nav-link">Sessions</a></li>
@@ -31,22 +37,25 @@
         </ul>
         
         <div class="navbar-right">
-            <span style="color: white; font-weight: 600; margin-right: 16px;">{{ current_user.name }}</span>
+            <span class="profile-name">{{ current_user.name }} <span class="role-badge">{{ current_user.role.upper() }}</span></span>
             <a href="{{ url_for('routes.logout') }}" class="btn-logout">Logout</a>
         </div>
     </div>
 </nav>
 {% endif %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="container">
+<div class="flash-messages-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                    <button class="close-btn" onclick="this.parentElement.remove()">×</button>
+                </div>
             {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+        {% endif %}
+    {% endwith %}
+</div>
 
 {% block content %}{% endblock %}
 

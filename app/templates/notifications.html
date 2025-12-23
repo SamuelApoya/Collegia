@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
-    <div class="hero">
-        <div>
-            <h1>Notifications</h1>
-            <p>System updates and alerts</p>
-        </div>
-        <div class="hero-badge">{{ current_user.role.upper() }}</div>
+<div class="container container-padding">
+    <div class="dashboard-header">
+        <h1>Notifications</h1>
+        <p>System updates and alerts</p>
     </div>
 
     <div class="card">
@@ -15,12 +12,12 @@
             {% for note in notifications %}
             <div class="notification-card">
                 <div class="notification-icon">
-                    {% if note.type == "meeting_reminder" %}
+                    {% if note.type == "meeting_reminder" %}🔔
                     {% elif note.type == "meeting_reminder_12hr" %}⚡
                     {% elif note.type == "booking_confirmation" %}
                     {% else %}💬{% endif %}
                 </div>
-                <div style="flex: 1;">
+                <div class="notification-content">
                     <div>{{ note.message }}</div>
                     <div class="notification-time">
                         {{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }}
@@ -32,7 +29,7 @@
             <div class="empty-state">
                 <div class="empty-icon">🔔</div>
                 <p>No notifications yet</p>
-                <p style="color: var(--gray); font-size: 14px;">You'll be notified about upcoming meetings</p>
+                <p class="empty-state-subtitle">You'll be notified about upcoming meetings</p>
             </div>
         {% endif %}
     </div>

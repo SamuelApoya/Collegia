@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container container-padding">
+    <div class="notes-wrapper">
+        <div class="dashboard-header">
+            <h1>Request Meeting Cancellation</h1>
+            <p>Provide a reason for your cancellation request</p>
+        </div>
+
+        <div class="card">
+            <div class="meeting-details-box">
+                <div class="detail-item">
+                    <strong>Professor:</strong> {{ meeting.professor }}
+                </div>
+                <div class="detail-item">
+                    <strong>Date:</strong> {{ meeting.date }}
+                </div>
+                <div class="detail-item">
+                    <strong>Time:</strong> {{ meeting.time }}
+                </div>
+                {% if meeting.notes %}
+                <div class="detail-item-last">
+                    <strong>Your Agenda:</strong> {{ meeting.notes }}
+                </div>
+                {% endif %}
+            </div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="reason" class="form-label">Cancellation Reason</label>
+                    <textarea 
+                        id="reason" 
+                        name="reason" 
+                        class="form-control" 
+                        placeholder="Please explain why you need to cancel this meeting..."
+                        required></textarea>
+                </div>
+
+                <div class="form-actions-buttons">
+                    <button type="submit" class="btn btn-primary">Submit Cancellation Request</button>
+                    <a href="{{ url_for('routes.sessions') }}" class="btn btn-secondary">Go Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

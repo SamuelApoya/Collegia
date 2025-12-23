@@ -1,25 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="login-wrapper">
-    <div class="login-card" style="max-width: 600px;">
-        <h2>Confirm Booking</h2>
-        <p>Review session details before confirming</p>
+<div class="container container-padding">
+    <div class="dashboard-header">
+        <h1>Book Session</h1>
+        <p>Schedule your advising appointment</p>
+    </div>
 
-        <div style="background: #E3F2FD; padding: 24px; margin: 24px 0; border-left: 4px solid var(--primary);">
-            <p style="margin-bottom: 12px;"><strong>Professor:</strong> {{ slot.professor_name }}</p>
-            <p style="margin-bottom: 12px;"><strong>Date:</strong> {{ slot.date }}</p>
-            <p><strong>Time:</strong> {{ slot.time }}</p>
-        </div>
-
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                <label class="form-label">Add any notes or topics you'd like to discuss</label>
-                {{ form.notes(class="form-control", placeholder="E.g., Course selection for next semester, internship advice, etc.") }}
+    <div class="notes-wrapper">
+        <div class="card">
+            <h2 class="section-heading">Session Details</h2>
+            
+            <div class="session-details-box">
+                <p class="detail-item"><strong>Professor:</strong> {{ slot.professor_name }}</p>
+                <p class="detail-item"><strong>Date:</strong> {{ slot.date }}</p>
+                <p class="detail-item-last"><strong>Time:</strong> {{ slot.time }}</p>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
-        </form>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label class="form-label">What would you like to discuss?</label>
+                    <p class="form-description">
+                        Share your agenda or topics for the meeting
+                    </p>
+                    {{ form.notes(class="form-control form-control-medium", 
+                        placeholder="E.g., Course selection for next semester, Career advice, Internship opportunities") }}
+                </div>
+                <div class="form-actions-buttons">
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                    <a href="{{ url_for('routes.sessions') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

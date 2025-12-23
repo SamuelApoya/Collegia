@@ -16,24 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Alert auto-dismiss (no need to create close button, it's already in HTML)
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
-        const closeBtn = document.createElement('div');
-        closeBtn.className = 'alert-close';
-        closeBtn.innerHTML = '×';
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            alert.style.animation = 'slideOutRight 0.4s ease-out';
-            setTimeout(() => alert.remove(), 400);
-        });
-        alert.appendChild(closeBtn);
-        
-        alert.style.cursor = 'pointer';
-        alert.addEventListener('click', function() {
-            this.style.animation = 'slideOutRight 0.4s ease-out';
-            setTimeout(() => this.remove(), 400);
-        });
-        
+        // Auto-dismiss after 5 seconds
         setTimeout(() => {
             alert.style.animation = 'slideOutRight 0.4s ease-out';
             setTimeout(() => alert.remove(), 400);
@@ -85,6 +71,84 @@ document.addEventListener('DOMContentLoaded', function() {
             );
         });
     });
+    
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    }
+
+    // Typing animation for quotes
+    const typingElement = document.getElementById('typing-quote');
+    
+    if (typingElement) {
+        const quotes = [
+            "Good advising is about listening, not just talking.",
+            "Every student's journey is unique and deserves personalized guidance.",
+            "Effective advising builds bridges between ambition and achievement.",
+            "Academic success starts with strong mentor-student relationships.",
+            "The best advisors help students discover their own path.",
+            "Regular advising sessions keep students on track to graduate.",
+            "Proactive advising prevents problems before they arise.",
+            "Great advisors empower students to make informed decisions.",
+            "Academic advising is an investment in student success.",
+            "Good advising transforms confusion into clarity."
+        ];
+        
+        let quoteIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingSpeed = 80;
+        
+        function typeQuote() {
+            const currentQuote = quotes[quoteIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentQuote.substring(0, charIndex - 1);
+                charIndex--;
+                typingSpeed = 40;
+            } else {
+                typingElement.textContent = currentQuote.substring(0, charIndex + 1);
+                charIndex++;
+                typingSpeed = 80;
+            }
+            
+            if (!isDeleting && charIndex === currentQuote.length) {
+                // Pause at end of quote
+                typingSpeed = 3000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                // Move to next quote
+                isDeleting = false;
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+                typingSpeed = 500;
+            }
+            
+            setTimeout(typeQuote, typingSpeed);
+        }
+        
+        // Start typing animation
+        typeQuote();
+    }
 });
 
 function showConfirmation(message, onConfirm) {

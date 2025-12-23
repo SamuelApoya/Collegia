@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
-    <div class="hero">
-        <div>
-            <h1>Available Sessions</h1>
-            <p>Browse and book advisor sessions</p>
-        </div>
-        <div class="hero-badge">STUDENT</div>
+<div class="container container-padding">
+    <div class="dashboard-header">
+        <h1>Available Sessions</h1>
+        <p>Browse and book advisor sessions</p>
     </div>
 
     {% if available %}
@@ -18,7 +15,7 @@
                     {% if slot.professor_picture %}
                         <img src="{{ url_for('static', filename='uploads/profiles/' + slot.professor_picture) }}" 
                              alt="{{ slot.professor_name }}"
-                             style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                             class="professor-avatar">
                     {% else %}
                         <div class="session-icon">👨‍🏫</div>
                     {% endif %}
@@ -26,11 +23,11 @@
                 </div>
                 <div class="session-card-body">
                     <div class="session-detail">
-                        <span style="font-size: 20px;">📅</span>
+                        <span class="detail-icon">📅</span>
                         <span>{{ slot.date }}</span>
                     </div>
                     <div class="session-detail">
-                        <span style="font-size: 20px;">⏰</span>
+                        <span class="detail-icon">⏰</span>
                         <span>{{ slot.time }}</span>
                     </div>
                 </div>
@@ -43,7 +40,7 @@
     {% else %}
         <div class="empty-state">
             <div class="empty-icon">📭</div>
-            <h3 style="font-size: 24px; margin-bottom: 12px;">No sessions available</h3>
+            <h3 class="empty-state-heading">No sessions available</h3>
             <p>Check back soon for new advisor availability</p>
         </div>
     {% endif %}

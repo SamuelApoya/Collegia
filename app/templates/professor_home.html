@@ -10,9 +10,9 @@
         <div class="hero-badge">PROFESSOR</div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+    <div class="home-grid">
         <div>
-            <h2 style="margin-bottom: 24px; font-size: 24px;">Today's Overview</h2>
+            <h2 class="section-heading">Today's Overview</h2>
 
             {% if meetings %}
                 {% for meeting in meetings %}
@@ -26,15 +26,14 @@
                         <p><strong>Student Notes:</strong> {{ meeting.notes }}</p>
                         
                         {% if meeting.meeting_notes %}
-                        <div style="margin-top: 16px; padding: 16px; background: #E8F5E9; border-left: 4px solid var(--success);">
-                            <strong style="color: var(--success);">Your Notes:</strong>
-                            <p style="margin-top: 8px;">{{ meeting.meeting_notes }}</p>
+                        <div class="professor-notes-box">
+                            <strong class="professor-notes-title">Your Notes:</strong>
+                            <p class="professor-notes-text">{{ meeting.meeting_notes }}</p>
                         </div>
                         {% endif %}
                         
                         <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
-                           class="btn btn-primary" 
-                           style="margin-top: 16px; display: inline-block;">
+                           class="btn btn-primary btn-notes">
                             {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
                         </a>
                     </div>
@@ -50,16 +49,16 @@
 
         <div>
             <div class="card">
-                <h3 style="margin-bottom: 16px;">Quick Actions</h3>
-                <a href="{{ url_for('routes.manage_sessions') }}" class="btn btn-primary btn-block" style="margin-bottom: 12px;">Manage Sessions</a>
+                <h3 class="card-heading">Quick Actions</h3>
+                <a href="{{ url_for('routes.manage_sessions') }}" class="btn btn-primary btn-block btn-spacing">Manage Sessions</a>
                 <a href="{{ url_for('routes.notifications') }}" class="btn btn-secondary btn-block">View Notifications</a>
             </div>
 
             <div class="card">
-                <h3 style="margin-bottom: 16px;">Advising Tips</h3>
-                <p style="margin-bottom: 8px;">Keep recurring office hours</p>
-                <p style="margin-bottom: 8px;">Take notes during meetings</p>
-                <p>Review student agendas</p>
+                <h3 class="card-heading">Advising Tips</h3>
+                <p class="tip-item">Keep recurring office hours</p>
+                <p class="tip-item">Take notes during meetings</p>
+                <p class="tip-item-last">Review student agendas</p>
             </div>
         </div>
     </div>
