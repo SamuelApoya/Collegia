@@ -103,7 +103,7 @@
                                 <div class="action-buttons">
                                     <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
                                        class="btn-table-action">
-                                        {% if meeting.meeting_notes %}Edit{% else %}Add Notes{% endif %}
+                                        {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
                                     </a>
                                     <form method="POST" action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}" class="inline-form">
                                         <button type="submit" class="btn-table-delete">Cancel</button>
