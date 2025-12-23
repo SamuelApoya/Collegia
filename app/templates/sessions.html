@@ -3,6 +3,7 @@
 {% block content %}
 
 <div class="container container-padding">
+
     <!-- My Booked Sessions Section -->
     {% if booked %}
     <div class="dashboard-header">
@@ -17,12 +18,13 @@
             <div class="table-cell">Time</div>
             <div class="table-cell">Actions</div>
         </div>
+
         {% for meeting in booked %}
         <div class="table-row">
             <div class="table-cell">
                 <div class="student-info">
                     {% if meeting.professor_picture %}
-                        <img src="{{ url_for('static', filename='uploads/profiles/' + meeting.professor_picture) }}" 
+                        <img src="{{ url_for('static', filename='uploads/profiles/' + meeting.professor_picture) }}"
                              alt="{{ meeting.professor_name }}"
                              class="student-avatar">
                     {% else %}
@@ -36,14 +38,24 @@
                     </div>
                 </div>
             </div>
+
             <div class="table-cell">
                 <span class="date-badge">{{ meeting.date }}</span>
             </div>
+
             <div class="table-cell">
                 <span class="time-badge">{{ meeting.time }}</span>
             </div>
+
             <div class="table-cell">
-                <a href="{{ url_for('routes.request_cancellation', meeting_id=meeting.id) }}" class="btn-table-delete">Cancel</a>
+                <!-- Cancel (POST, button) -->
+                <form method="POST"
+                      action="{{ url_for('routes.request_cancellation', meeting_id=meeting.id) }}"
+                      class="inline-form">
+                    <button type="submit" class="btn-table-delete">
+                        Cancel
+                    </button>
+                </form>
             </div>
         </div>
         {% endfor %}
@@ -57,44 +69,54 @@
     </div>
 
     {% if available %}
-        <div class="compact-table">
-            <div class="table-header">
-                <div class="table-cell">Professor</div>
-                <div class="table-cell">Date</div>
-                <div class="table-cell">Time</div>
-                <div class="table-cell">Action</div>
-            </div>
-            {% for slot in available %}
-            <div class="table-row">
-                <div class="table-cell">
-                    <div class="student-info">
-                        {% if slot.professor_picture %}
-                            <img src="{{ url_for('static', filename='uploads/profiles/' + slot.professor_picture) }}" 
-                                 alt="{{ slot.professor_name }}"
-                                 class="student-avatar">
-                        {% else %}
-                            <span class="student-icon">👨‍🏫</span>
-                        {% endif %}
-                        <span>{{ slot.professor_name or 'Professor' }}</span>
-                    </div>
-                </div>
-                <div class="table-cell">
-                    <span class="date-badge">{{ slot.date }}</span>
-                </div>
-                <div class="table-cell">
-                    <span class="time-badge">{{ slot.time }}</span>
-                </div>
-                <div class="table-cell">
-                    <a href="{{ url_for('routes.book', slot_id=slot.id) }}" class="btn-table-action">Book</a>
-                </div>
-            </div>
-            {% endfor %}
+    <div class="compact-table">
+        <div class="table-header">
+            <div class="table-cell">Professor</div>
+            <div class="table-cell">Date</div>
+            <div class="table-cell">Time</div>
+            <div class="table-cell">Action</div>
         </div>
+
+        {% for slot in available %}
+        <div class="table-row">
+            <div class="table-cell">
+                <div class="student-info">
+                    {% if slot.professor_picture %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' + slot.professor_picture) }}"
+                             alt="{{ slot.professor_name }}"
+                             class="student-avatar">
+                    {% else %}
+                        <span class="student-icon">👨‍🏫</span>
+                    {% endif %}
+                    <span>{{ slot.professor_name or 'Professor' }}</span>
+                </div>
+            </div>
+
+            <div class="table-cell">
+                <span class="date-badge">{{ slot.date }}</span>
+            </div>
+
+            <div class="table-cell">
+                <span class="time-badge">{{ slot.time }}</span>
+            </div>
+
+            <div class="table-cell">
+                <!-- Book (GET, button) -->
+                <form method="GET"
+                      action="{{ url_for('routes.book', slot_id=slot.id) }}"
+                      class="inline-form">
+                    <button type="submit" class="btn-table-action">
+                        Book
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="empty-state-compact">
-            <div class="empty-icon">📅</div>
-            <p>No sessions available at the moment</p>
-        </div>
+    <div class="empty-state-compact">
+        <p>No sessions available at the moment</p>
+    </div>
     {% endif %}
 
 </div>

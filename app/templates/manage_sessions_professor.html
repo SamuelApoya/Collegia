@@ -23,105 +23,131 @@
     </div>
 
     <div class="manage-grid">
-        <!-- Left Column: Availability & Meetings Table -->
         <div>
-            <!-- Available Slots Table -->
+            <!-- Available Slots -->
             <div class="card">
                 <h2 class="section-heading">Your Availability</h2>
-                
+
                 {% set available_slots = slots|selectattr('booked', 'equalto', False)|list %}
                 {% if available_slots %}
-                    <div class="compact-table">
-                        <div class="table-header">
-                            <div class="table-cell">Date</div>
-                            <div class="table-cell">Time</div>
-                            <div class="table-cell">Status</div>
-                            <div class="table-cell">Action</div>
-                        </div>
-                        {% for slot in available_slots %}
-                        <div class="table-row">
-                            <div class="table-cell">
-                                <span class="date-badge">{{ slot.date }}</span>
-                            </div>
-                            <div class="table-cell">
-                                <span class="time-badge">{{ slot.time }}</span>
-                            </div>
-                            <div class="table-cell">
-                                <span class="status-badge status-available">Available</span>
-                            </div>
-                            <div class="table-cell">
-                                <form method="POST" action="{{ url_for('routes.delete_slot', slot_id=slot.id) }}" class="inline-form">
-                                    <button type="submit" class="btn-table-delete">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                        {% endfor %}
+                <div class="compact-table">
+                    <div class="table-header">
+                        <div class="table-cell">Date</div>
+                        <div class="table-cell">Time</div>
+                        <div class="table-cell">Status</div>
+                        <div class="table-cell">Action</div>
                     </div>
+
+                    {% for slot in available_slots %}
+                    <div class="table-row">
+                        <div class="table-cell">
+                            <span class="date-badge">📅 {{ slot.date }}</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="time-badge">🕐 {{ slot.time }}</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="status-badge status-available">Available</span>
+                        </div>
+                        <div class="table-cell">
+                            <form method="POST"
+                                  action="{{ url_for('routes.delete_slot', slot_id=slot.id) }}"
+                                  class="inline-form">
+                                <button type="submit" class="btn-table-delete">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    <div class="empty-state-compact">
-                        <p>No availability added yet</p>
-                    </div>
+                <div class="empty-state-compact">
+                    <div class="empty-icon">📅</div>
+                    <p>No availability added yet</p>
+                </div>
                 {% endif %}
             </div>
 
-            <!-- Booked Sessions Table -->
+            <!-- Booked Sessions -->
             <div class="card card-margin-top">
                 <h2 class="section-heading">Your Booked Sessions</h2>
 
                 {% if meetings %}
-                    <div class="compact-table">
-                        <div class="table-header">
-                            <div class="table-cell">Student</div>
-                            <div class="table-cell">Date</div>
-                            <div class="table-cell">Time</div>
-                            <div class="table-cell">Actions</div>
-                        </div>
-                        {% for meeting in meetings %}
-                        <div class="table-row">
-                            <div class="table-cell">
-                                <div class="student-info">
-                                    {% if meeting.student_picture %}
-                                        <img src="{{ url_for('static', filename='uploads/profiles/' + meeting.student_picture) }}" 
-                                             alt="{{ meeting.student }}"
-                                             class="student-avatar">
-                                    {% else %}
-                                        <span class="student-icon">👨‍🎓</span>
-                                    {% endif %}
-                                    <strong>{{ meeting.student }}</strong>
-                                </div>
-                                <div class="student-notes">
-                                    {{ meeting.notes }}
-                                </div>
-                            </div>
-                            <div class="table-cell">
-                                <span class="date-badge">{{ meeting.date }}</span>
-                            </div>
-                            <div class="table-cell">
-                                <span class="time-badge">{{ meeting.time }}</span>
-                            </div>
-                            <div class="table-cell">
-                                <div class="action-buttons">
-                                    <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
-                                       class="btn-table-action">
-                                        {% if meeting.meeting_notes %}Edit Notes{% else %}Add Notes{% endif %}
-                                    </a>
-                                    <form method="POST" action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}" class="inline-form">
-                                        <button type="submit" class="btn-table-delete">Cancel</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+                <div class="compact-table">
+                    <div class="table-header">
+                        <div class="table-cell">Student</div>
+                        <div class="table-cell">Date</div>
+                        <div class="table-cell">Time</div>
+                        <div class="table-cell">Actions</div>
                     </div>
+
+                    {% for meeting in meetings %}
+                    <div class="table-row">
+                        <div class="table-cell">
+                            <div class="student-info">
+                                {% if meeting.student_picture %}
+                                <img src="{{ url_for('static', filename='uploads/profiles/' + meeting.student_picture) }}"
+                                     alt="{{ meeting.student }}"
+                                     class="student-avatar">
+                                {% else %}
+                                <span class="student-icon">👨‍🎓</span>
+                                {% endif %}
+                                <strong>{{ meeting.student }}</strong>
+                            </div>
+                            <div class="student-notes">
+                                {{ meeting.notes }}
+                            </div>
+                        </div>
+
+                        <div class="table-cell">
+                            <span class="date-badge">{{ meeting.date }}</span>
+                        </div>
+
+                        <div class="table-cell">
+                            <span class="time-badge">{{ meeting.time }}</span>
+                        </div>
+
+                        <div class="table-cell">
+                            <div class="action-buttons">
+
+                                <!-- Edit / Add Notes -->
+                                <form method="GET"
+                                      action="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}"
+                                      class="inline-form">
+                                    <button type="submit" class="btn-table-action">
+                                        {% if meeting.meeting_notes %}
+                                            Edit Notes
+                                        {% else %}
+                                            Add Notes
+                                        {% endif %}
+                                    </button>
+                                </form>
+
+                                <!-- Cancel -->
+                                <form method="POST"
+                                      action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}"
+                                      class="inline-form">
+                                    <button type="submit" class="btn-table-delete">
+                                        Cancel
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
                 {% else %}
-                    <div class="empty-state-compact">
-                        <p>No booked sessions yet</p>
-                    </div>
+                <div class="empty-state-compact">
+                    <div class="empty-icon">📭</div>
+                    <p>No booked sessions yet</p>
+                </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Add Form & Tips -->
+        <!-- Right Column -->
         <div>
             <div class="card">
                 <h2 class="section-heading-small">Add New Availability</h2>
@@ -136,22 +162,17 @@
                         <label class="form-label">Time</label>
                         {{ form.time(class="form-control") }}
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Add Availability</button>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Add Availability
+                    </button>
                 </form>
             </div>
 
             <div class="card card-margin-top-small">
                 <h3 class="tips-heading">Quick Tips</h3>
-                
-                <div class="tip-card tip-blue">
-                    Students can instantly book from your open slots
-                </div>
-                <div class="tip-card tip-blue2">
-                    Booked slots become locked automatically
-                </div>
-                <div class="tip-card tip-blue3">
-                    Click Delete to remove unused slots
-                </div>
+                <div class="tip-card tip-blue">Students can instantly book from your open slots</div>
+                <div class="tip-card tip-green">Booked slots become locked automatically</div>
+                <div class="tip-card tip-orange">Click Delete to remove unused slots</div>
             </div>
         </div>
     </div>
