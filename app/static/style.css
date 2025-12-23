@@ -690,12 +690,12 @@ body {
     border-color: var(--primary);
 }
 
-.tip-card.tip-green {
-    border-color: var(--success);
+.tip-card.tip-blue2 {
+    border-color: var(--primary);
 }
 
-.tip-card.tip-orange {
-    border-color: var(--accent);
+.tip-card.tip-blue3 {
+    border-color: var(--primary);
 }
 
 /* Meeting cards */
