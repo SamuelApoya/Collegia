@@ -41,10 +41,10 @@
                         {% for slot in available_slots %}
                         <div class="table-row">
                             <div class="table-cell">
-                                <span class="date-badge">📅 {{ slot.date }}</span>
+                                <span class="date-badge">{{ slot.date }}</span>
                             </div>
                             <div class="table-cell">
-                                <span class="time-badge">🕐 {{ slot.time }}</span>
+                                <span class="time-badge">{{ slot.time }}</span>
                             </div>
                             <div class="table-cell">
                                 <span class="status-badge status-available">Available</span>
@@ -59,7 +59,6 @@
                     </div>
                 {% else %}
                     <div class="empty-state-compact">
-                        <div class="empty-icon">📅</div>
                         <p>No availability added yet</p>
                     </div>
                 {% endif %}
@@ -104,7 +103,7 @@
                                 <div class="action-buttons">
                                     <a href="{{ url_for('routes.meeting_notes', meeting_id=meeting.id) }}" 
                                        class="btn-table-action">
-                                        {% if meeting.meeting_notes %}✏️ Edit{% else %}📝 Add{% endif %}
+                                        {% if meeting.meeting_notes %}Edit{% else %}Add Notes{% endif %}
                                     </a>
                                     <form method="POST" action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}" class="inline-form">
                                         <button type="submit" class="btn-table-delete">Cancel</button>
@@ -116,14 +115,13 @@
                     </div>
                 {% else %}
                     <div class="empty-state-compact">
-                        <div class="empty-icon">📭</div>
                         <p>No booked sessions yet</p>
                     </div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Right Column: Add Form & Tips -->
+        <!-- Add Form & Tips -->
         <div>
             <div class="card">
                 <h2 class="section-heading-small">Add New Availability</h2>

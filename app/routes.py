@@ -10,7 +10,6 @@ from app.models import User, Meeting, Availability, Notification
 from forms import LoginForm, RegisterForm, AvailabilityForm, BookingForm, SettingsForm, MeetingNotesForm
 from datetime import datetime, timedelta
 
-UPLOAD_FOLDER = 'static/uploads/profiles'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -182,7 +181,6 @@ def logout():
     logout_user()
     return redirect("/")
 
-# HOME - Landing page with hero background + all content
 @routes.route("/home")
 @login_required
 def home():
@@ -213,7 +211,6 @@ def home():
         
         return render_template("home_student.html", meetings=meetings)
 
-# MANAGE SESSIONS - For professors to add availability
 @routes.route("/manage-sessions", methods=["GET", "POST"])
 @login_required
 def manage_sessions():
@@ -256,19 +253,15 @@ def manage_sessions():
 @routes.route("/sessions")
 @login_required
 def sessions():
-    # Get available slots
     available = Availability.query.filter_by(booked=False).all()
     
-    # Add professor info to available slots
     for slot in available:
         professor = User.query.filter_by(email=slot.professor_email).first()
         slot.professor_name = professor.name if professor else 'Professor'
         slot.professor_picture = professor.profile_picture if professor else None
     
-    # Get student's booked meetings
     booked = Meeting.query.filter_by(student_email=current_user.email).order_by(Meeting.date.asc(), Meeting.time.asc()).all()
     
-    # Add professor info to booked meetings
     for meeting in booked:
         professor = User.query.filter_by(email=meeting.professor_email).first()
         meeting.professor_name = professor.name if professor else 'Professor'
@@ -432,7 +425,6 @@ def request_cancellation(meeting_id):
         meeting_date = meeting.date
         meeting_time = meeting.time
         
-        # Free up the availability slot
         availability_slot = Availability.query.filter_by(
             date=meeting.date,
             time=meeting.time,
@@ -442,11 +434,9 @@ def request_cancellation(meeting_id):
         if availability_slot:
             availability_slot.booked = False
         
-        # Delete the meeting
         db.session.delete(meeting)
         db.session.commit()
         
-        # Notify professor
         if professor:
             cancellation_notification = Notification(
                 user_email=professor.email,
@@ -485,6 +475,8 @@ def notifications():
 @routes.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():
+    from flask import current_app
+    
     form = SettingsForm()
     
     if form.validate_on_submit():
@@ -497,10 +489,27 @@ def settings():
         if form.profile_picture.data:
             file = form.profile_picture.data
             if file and allowed_file(file.filename):
-                filename = secure_filename(f"{current_user.id}_{file.filename}")
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                upload_folder = os.path.join(
+                    current_app.root_path,
+                    "static",
+                    "uploads",
+                    "profiles"
+                )
                 
-                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                if current_user.profile_picture:
+                    old_filepath = os.path.join(upload_folder, current_user.profile_picture)
+                    if os.path.exists(old_filepath):
+                        try:
+                            os.remove(old_filepath)
+                        except:
+                            pass
+                
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                file_extension = file.filename.rsplit('.', 1)[1].lower()
+                filename = f"{current_user.id}_{timestamp}.{file_extension}"
+                
+                os.makedirs(upload_folder, exist_ok=True)
+                filepath = os.path.join(upload_folder, filename)
                 
                 file.save(filepath)
                 current_user.profile_picture = filename

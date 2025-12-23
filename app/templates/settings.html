@@ -24,14 +24,14 @@
                     
                     <div class="profile-preview-wrapper">
                         <img id="profile-preview" 
-                             src="{{ url_for('static', filename='uploads/profiles/' + current_user.profile_picture) }}" 
+                             src="{{ url_for('static', filename='uploads/profiles/' + current_user.profile_picture) }}?v={{ range(1, 1000000) | random }}" 
                              alt="Profile" 
                              class="profile-preview-img"
                              onerror="this.src='/static/uploads/profiles/logo.png'">
                     </div>
                     
                     <div class="info-box info-box-blue">
-                        <p class="info-box-title">📸 Choose a profile picture (JPG, PNG, GIF)</p>
+                        <p class="info-box-title">Choose a profile picture (JPG, PNG, GIF)</p>
                         <p class="info-box-subtitle">Your photo will be displayed on your profile</p>
                     </div>
                     {{ form.profile_picture(class="form-control", id="profile_picture") }}
