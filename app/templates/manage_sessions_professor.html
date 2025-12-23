@@ -24,6 +24,7 @@
 
     <div class="manage-grid">
         <div>
+
             <!-- Available Slots -->
             <div class="card">
                 <h2 class="section-heading">Your Availability</h2>
@@ -53,7 +54,11 @@
                             <form method="POST"
                                   action="{{ url_for('routes.delete_slot', slot_id=slot.id) }}"
                                   class="inline-form">
-                                <button type="submit" class="btn-table-delete">
+                                <button
+                                    type="button"
+                                    class="btn-table-delete js-confirm"
+                                    data-title="Delete availability?"
+                                    data-message="This time slot will be permanently removed.">
                                     Delete
                                 </button>
                             </form>
@@ -124,11 +129,15 @@
                                     </button>
                                 </form>
 
-                                <!-- Cancel -->
+                                <!-- Cancel Meeting -->
                                 <form method="POST"
                                       action="{{ url_for('routes.cancel_meeting', meeting_id=meeting.id) }}"
                                       class="inline-form">
-                                    <button type="submit" class="btn-table-delete">
+                                    <button
+                                        type="button"
+                                        class="btn-table-delete js-confirm"
+                                        data-title="Cancel meeting?"
+                                        data-message="The student will be notified.">
                                         Cancel
                                     </button>
                                 </form>

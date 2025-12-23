@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collegia - Academic Advising Platform</title>
+    <title>Collegia</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </head>
@@ -16,28 +17,31 @@
             <span class="navbar-brand-icon">🎓</span>
             <span>Collegia</span>
         </a>
-        
+
         <button class="hamburger" id="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </button>
-        
+
         <ul class="navbar-nav" id="navLinks">
             <li><a href="{{ url_for('routes.home') }}" class="nav-link">Home</a></li>
-            
+
             {% if current_user.role == "student" %}
                 <li><a href="{{ url_for('routes.sessions') }}" class="nav-link">Sessions</a></li>
             {% else %}
                 <li><a href="{{ url_for('routes.manage_sessions') }}" class="nav-link">Manage</a></li>
             {% endif %}
-            
+
             <li><a href="{{ url_for('routes.notifications') }}" class="nav-link">Notifications</a></li>
             <li><a href="{{ url_for('routes.settings') }}" class="nav-link">Settings</a></li>
         </ul>
-        
+
         <div class="navbar-right">
-            <span class="profile-name">{{ current_user.name }} <span class="role-badge">{{ current_user.role.upper() }}</span></span>
+            <span class="profile-name">
+                {{ current_user.name }}
+                <span class="role-badge">{{ current_user.role.upper() }}</span>
+            </span>
             <a href="{{ url_for('routes.logout') }}" class="btn-logout">Logout</a>
         </div>
     </div>
@@ -46,18 +50,35 @@
 
 <div class="flash-messages-container">
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                    <button class="close-btn" onclick="this.parentElement.remove()">×</button>
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+                <button class="close-btn" onclick="this.parentElement.remove()">×</button>
+            </div>
+        {% endfor %}
     {% endwith %}
 </div>
 
 {% block content %}{% endblock %}
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="confirm-modal hidden">
+    <div class="confirm-backdrop"></div>
+
+    <div class="confirm-box">
+        <h3 id="confirmTitle">Confirm action</h3>
+        <p id="confirmMessage">Are you sure?</p>
+
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="confirmCancel">
+                Keep
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmOk">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

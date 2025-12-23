@@ -11,14 +11,10 @@
         {% if notifications %}
             {% for note in notifications %}
             <div class="notification-card">
-                <div class="notification-icon">
-                    {% if note.type == "meeting_reminder" %}
-                    {% elif note.type == "meeting_reminder_12hr" %}⚡
-                    {% elif note.type == "booking_confirmation" %}
-                    {% else %}{% endif %}
-                </div>
                 <div class="notification-content">
-                    <div>{{ note.message }}</div>
+                    <div class="notification-message">
+                        {{ note.message }}
+                    </div>
                     <div class="notification-time">
                         {{ note.created_at.strftime('%B %d, %Y at %I:%M %p') }}
                     </div>
@@ -28,7 +24,9 @@
         {% else %}
             <div class="empty-state">
                 <p>No notifications yet</p>
-                <p class="empty-state-subtitle">You'll be notified about upcoming meetings</p>
+                <p class="empty-state-subtitle">
+                    You'll be notified about upcoming meetings
+                </p>
             </div>
         {% endif %}
     </div>
