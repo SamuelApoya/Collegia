@@ -185,8 +185,8 @@ def logout():
 @login_required
 def home():
     if current_user.role == "professor":
-        meetings = Meeting.query.filter_by(professor=current_user.name).all()
-        slots = Availability.query.filter_by(professor_name=current_user.name).all()
+        meetings = Meeting.query.filter_by(professor_email=current_user.email).all()
+        slots = Availability.query.filter_by(professor_email=current_user.email).all()
         
         for meeting in meetings:
             student = User.query.filter_by(email=meeting.student_email).first()
@@ -231,8 +231,9 @@ def manage_sessions():
         flash('Availability added successfully!', 'success')
         return redirect("/manage-sessions")
 
-    meetings = Meeting.query.filter_by(professor=current_user.name).all()
-    slots = Availability.query.filter_by(professor_name=current_user.name).all()
+    # FIXED: Changed from professor_name to professor_email
+    meetings = Meeting.query.filter_by(professor_email=current_user.email).all()
+    slots = Availability.query.filter_by(professor_email=current_user.email).all()
     
     for meeting in meetings:
         student = User.query.filter_by(email=meeting.student_email).first()
@@ -340,7 +341,7 @@ def delete_slot(slot_id):
     
     slot = Availability.query.get_or_404(slot_id)
     
-    if slot.professor_name != current_user.name:
+    if slot.professor_email != current_user.email:
         flash('You can only delete your own availability slots.', 'error')
         return redirect(url_for('routes.manage_sessions'))
     
@@ -363,7 +364,7 @@ def cancel_meeting(meeting_id):
     
     meeting = Meeting.query.get_or_404(meeting_id)
     
-    if meeting.professor != current_user.name:
+    if meeting.professor_email != current_user.email:
         flash('You can only cancel your own meetings.', 'error')
         return redirect(url_for('routes.manage_sessions'))
     
@@ -375,8 +376,9 @@ def cancel_meeting(meeting_id):
     availability_slot = Availability.query.filter_by(
         date=meeting.date,
         time=meeting.time,
-        professor_name=meeting.professor
+        professor_email=meeting.professor_email
     ).first()
+
     
     if availability_slot:
         availability_slot.booked = False
