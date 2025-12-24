@@ -67,16 +67,12 @@ body {
     margin-right: 10px;
     display: inline-block;
     vertical-align: middle;
-}
-
-.navbar-logo {
     transition: transform 2s ease;
 }
 
 .navbar-logo.rotate {
     transform: rotate(360deg);
 }
-
 
 .navbar-brand-icon {
     font-size: 28px;
@@ -280,7 +276,7 @@ body {
     padding: 40px;
 }
 
-/* Hero section - increased transparency */
+/* Hero section */
 .hero {
     position: relative;
     background: 
@@ -320,7 +316,6 @@ body {
     z-index: 1;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
-
 
 /* Typing animation for quotes */
 .typing-quote-wrapper {
@@ -436,7 +431,7 @@ body {
     font-weight: 600;
 }
 
-/* Compact table view - professional design */
+/* Compact table view */
 .compact-table {
     width: 100%;
     border: 1px solid var(--border);
@@ -634,7 +629,6 @@ body {
     font-weight: 600;
     font-size: 14px;
 }
-
 
 .section-heading {
     margin-bottom: 20px;
@@ -1330,9 +1324,7 @@ textarea.form-control {
     opacity: 1;
 }
 
-
 /* Confirmation Modal */
-
 .confirm-modal.hidden {
     display: none;
 }
@@ -1379,7 +1371,6 @@ textarea.form-control {
     gap: 12px;
 }
 
-/* Modal animation */
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -1390,7 +1381,6 @@ textarea.form-control {
         transform: scale(1);
     }
 }
-
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -1442,11 +1432,12 @@ textarea.form-control {
     .navbar-right {
         display: none;
     }
-
     
     .hero {
         padding: 40px 20px;
-        min-height: 50vh;
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
     }
     
     .hero h1 {
@@ -1535,12 +1526,22 @@ textarea.form-control {
     .table-row {
         grid-template-columns: 1fr;
     }
-    
+
+    .table-row {
+        border-bottom: 3px solid var(--border);
+        margin-bottom: 12px;
+    }
+
     .table-cell {
         padding: 12px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #e0e0e0;
     }
-    
+
+    .table-cell:last-child {
+        border-bottom: none;
+        padding-bottom: 12px;
+    }
+
     .table-header {
         display: none;
     }
