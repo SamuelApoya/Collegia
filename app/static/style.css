@@ -61,6 +61,23 @@ body {
     z-index: 1001;
 }
 
+.navbar-logo {
+    height: 28px;
+    width: auto;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.navbar-logo {
+    transition: transform 2s ease;
+}
+
+.navbar-logo.rotate {
+    transform: rotate(360deg);
+}
+
+
 .navbar-brand-icon {
     font-size: 28px;
 }
@@ -1424,12 +1441,6 @@ textarea.form-control {
     
     .navbar-right {
         display: none;
-    }
-
-    .navbar-logo {
-    height: 36px;
-    width: auto;
-    display: block;
     }
 
     

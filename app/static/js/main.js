@@ -53,6 +53,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 180000);
     });
 
+    // Navbar logo rotation animation
+    const logo = document.querySelector('.navbar-logo');
+
+    if (logo) {
+        // Initial rotate shortly after load
+        setTimeout(() => {
+            logo.classList.add('rotate');
+            setTimeout(() => logo.classList.remove('rotate'), 1000);
+        }, 800);
+
+        // Rotate every 60 seconds
+        setInterval(() => {
+            logo.classList.add('rotate');
+            setTimeout(() => logo.classList.remove('rotate'), 1000);
+        }, 60000);
+    }
+
+
     // Confirmation modal (global, from base.html)
     let pendingForm = null;
 
