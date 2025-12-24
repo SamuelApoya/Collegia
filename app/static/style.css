@@ -1425,6 +1425,13 @@ textarea.form-control {
     .navbar-right {
         display: none;
     }
+
+    .navbar-logo {
+    height: 36px;
+    width: auto;
+    display: block;
+    }
+
     
     .hero {
         padding: 40px 20px;
