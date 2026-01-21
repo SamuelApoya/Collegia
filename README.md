@@ -1,6 +1,6 @@
 # Collegia
 
-A full-stack advising management platform that consolidates fragmented workflows-spreadsheets, manual emails, Google Docs, and multiple calendar apps as one unified system for students and faculty advisors with isntant and real-time note-taking
+A full-stack advising management platform that consolidates fragmented workflows-spreadsheets, manual emails, Google Docs, and multiple calendar apps as one unified system for students and faculty advisors with instant and real-time note-taking
 
 ## Overview
 
@@ -35,6 +35,35 @@ Collegia helps students and professors escape the chaos of managing advising ses
 - Automatic Google Calendar event creation
 - Real-time in-app notifications
 - Availability slot management
+
+
+## App Screens
+
+<figure style="display:inline-block; margin:10px; text-align:center;">
+  <img src="screenshots/login.png" width="300" />
+  <figcaption><strong>Login</strong><br/>Secure authentication with session management</figcaption>
+</figure>
+
+<figure style="display:inline-block; margin:10px; text-align:center;">
+  <img src="screenshots/home.png" width="300" />
+  <figcaption><strong>Home</strong><br/>Central dashboard for users</figcaption>
+</figure>
+
+<figure style="display:inline-block; margin:10px; text-align:center;">
+  <img src="screenshots/sessions.png" width="300" />
+  <figcaption><strong>Sessions</strong><br/>Manage active advising sessions</figcaption>
+</figure>
+
+<figure style="display:inline-block; margin:10px; text-align:center;">
+  <img src="screenshots/notifications.png" width="300" />
+  <figcaption><strong>Notifications</strong><br/>Real-time alerts and updates</figcaption>
+</figure>
+
+<figure style="display:inline-block; margin:10px; text-align:center;">
+  <img src="screenshots/settings.png" width="300" />
+  <figcaption><strong>Settings</strong><br/>Profile and account configuration</figcaption>
+</figure>
+
 
 ## Tech Stack
 
