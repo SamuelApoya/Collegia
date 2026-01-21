@@ -39,30 +39,31 @@ Collegia helps students and professors escape the chaos of managing advising ses
 
 ## App Screens
 
-<div style="margin-bottom:30px; text-align:center;">
-  <img src="screenshots/login.png" width="480" />
+<div style="margin-bottom:40px; text-align:center;">
+  <img src="screenshots/login.png" style="width:100%; max-width:1000px;" />
   <div><strong>Login</strong><br/>Secure authentication with session management</div>
 </div>
 
-<div style="margin-bottom:30px; text-align:center;">
-  <img src="screenshots/home.png" width="480" />
+<div style="margin-bottom:40px; text-align:center;">
+  <img src="screenshots/home.png" style="width:100%; max-width:1000px;" />
   <div><strong>Home</strong><br/>Central dashboard for users</div>
 </div>
 
-<div style="margin-bottom:30px; text-align:center;">
-  <img src="screenshots/sessions.png" width="480" />
+<div style="margin-bottom:40px; text-align:center;">
+  <img src="screenshots/sessions.png" style="width:100%; max-width:1000px;" />
   <div><strong>Sessions</strong><br/>Manage active advising sessions</div>
 </div>
 
-<div style="margin-bottom:30px; text-align:center;">
-  <img src="screenshots/notifications.png" width="480" />
+<div style="margin-bottom:40px; text-align:center;">
+  <img src="screenshots/notifications.png" style="width:100%; max-width:1000px;" />
   <div><strong>Notifications</strong><br/>Real-time alerts and updates</div>
 </div>
 
-<div style="margin-bottom:30px; text-align:center;">
-  <img src="screenshots/settings.png" width="480" />
+<div style="margin-bottom:40px; text-align:center;">
+  <img src="screenshots/settings.png" style="width:100%; max-width:1000px;" />
   <div><strong>Settings</strong><br/>Profile and account configuration</div>
 </div>
+
 
 
 ## Tech Stack
