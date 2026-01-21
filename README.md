@@ -39,30 +39,30 @@ Collegia helps students and professors escape the chaos of managing advising ses
 
 ## App Screens
 
-<figure style="display:inline-block; margin:10px; text-align:center;">
-  <img src="screenshots/login.png" width="300" />
-  <figcaption><strong>Login</strong><br/>Secure authentication with session management</figcaption>
-</figure>
+<div style="margin-bottom:30px; text-align:center;">
+  <img src="screenshots/login.png" width="480" />
+  <div><strong>Login</strong><br/>Secure authentication with session management</div>
+</div>
 
-<figure style="display:inline-block; margin:10px; text-align:center;">
-  <img src="screenshots/home.png" width="300" />
-  <figcaption><strong>Home</strong><br/>Central dashboard for users</figcaption>
-</figure>
+<div style="margin-bottom:30px; text-align:center;">
+  <img src="screenshots/home.png" width="480" />
+  <div><strong>Home</strong><br/>Central dashboard for users</div>
+</div>
 
-<figure style="display:inline-block; margin:10px; text-align:center;">
-  <img src="screenshots/sessions.png" width="300" />
-  <figcaption><strong>Sessions</strong><br/>Manage active advising sessions</figcaption>
-</figure>
+<div style="margin-bottom:30px; text-align:center;">
+  <img src="screenshots/sessions.png" width="480" />
+  <div><strong>Sessions</strong><br/>Manage active advising sessions</div>
+</div>
 
-<figure style="display:inline-block; margin:10px; text-align:center;">
-  <img src="screenshots/notifications.png" width="300" />
-  <figcaption><strong>Notifications</strong><br/>Real-time alerts and updates</figcaption>
-</figure>
+<div style="margin-bottom:30px; text-align:center;">
+  <img src="screenshots/notifications.png" width="480" />
+  <div><strong>Notifications</strong><br/>Real-time alerts and updates</div>
+</div>
 
-<figure style="display:inline-block; margin:10px; text-align:center;">
-  <img src="screenshots/settings.png" width="300" />
-  <figcaption><strong>Settings</strong><br/>Profile and account configuration</figcaption>
-</figure>
+<div style="margin-bottom:30px; text-align:center;">
+  <img src="screenshots/settings.png" width="480" />
+  <div><strong>Settings</strong><br/>Profile and account configuration</div>
+</div>
 
 
 ## Tech Stack
