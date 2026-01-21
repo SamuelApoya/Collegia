@@ -41,35 +41,35 @@ Collegia helps students and professors escape the chaos of managing advising ses
 
 <div style="text-align:center;">
   <img src="screenshots/login.png" style="width:100%; max-width:1000px;" />
-  <div><strong>Login</strong><br/>Secure authentication with session management</div>
+  <div><strong>Figure 1.Login</strong><br/>Secure authentication with session management</div>
 </div>
 
 <br><br>
 
 <div style="text-align:center;">
   <img src="screenshots/home.png" style="width:100%; max-width:1000px;" />
-  <div><strong>Home</strong><br/>Central dashboard for users</div>
+  <div><strong>Figure 2. Home</strong><br/>Central dashboard for users</div>
 </div>
 
 <br><br>
 
 <div style="text-align:center;">
   <img src="screenshots/sessions.png" style="width:100%; max-width:1000px;" />
-  <div><strong>Sessions</strong><br/>Manage active advising sessions</div>
+  <div><strong>Figure 3. Sessions</strong><br/>Manage active advising sessions</div>
 </div>
 
 <br><br>
 
 <div style="text-align:center;">
   <img src="screenshots/notifications.png" style="width:100%; max-width:1000px;" />
-  <div><strong>Notifications</strong><br/>Real-time alerts and updates</div>
+  <div><strong>Figure 4. Notifications</strong><br/>Real-time alerts and updates</div>
 </div>
 
 <br><br>
 
 <div style="text-align:center;">
   <img src="screenshots/settings.png" style="width:100%; max-width:1000px;" />
-  <div><strong>Settings</strong><br/>Profile and account configuration</div>
+  <div><strong>Figure 5. Settings</strong><br/>Profile and account configuration</div>
 </div>
 
 
